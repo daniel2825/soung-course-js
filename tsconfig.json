@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "components/Shared/Button.jsx", "context/UserDetailContext.jsx", "components/Home/header.jsx", "app/index.jsx", "app/_layout.jsx", "app/Home/index.jsx", "app/(tabs)/progress.jsx", "app/Profile/profile.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/explore.jsx", "app/(tabs)/home.jsx"  ]
 }
