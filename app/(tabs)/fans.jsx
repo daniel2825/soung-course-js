@@ -6,7 +6,7 @@ export default function Fans(){
     return (
         <View>
             <Header/>
-            <Text>Fans</Text>
+            <Text>Fans fans</Text>
         </View>
     )
 }

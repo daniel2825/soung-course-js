@@ -3,6 +3,8 @@ import React from 'react'
 import Header from '../../components/Home/header'
 import Button from '../../components/Shared/Button'
 import Colors from '../../constants/Colors'
+import Courses from '../../components/Home/CourseList'
+import NoCourses from '../../components/Home/NoCourses'
 
 export default function Home(){
     return (
@@ -11,7 +13,9 @@ export default function Home(){
             height: '100%',
         }}>
             <Header/>
-            <Button text={'Enviar'} type='outline'/>
+            <Courses/>
+
+            
         </View>
     )
 }
