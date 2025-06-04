@@ -1,8 +1,9 @@
-import {View, Text, Platform, FlatList} from 'react-native'
+import {View, Text, Platform, FlatList, Image} from 'react-native'
 import React from 'react'
 import Header from '../../components/Home/header'
 import Button from '../../components/Shared/Button'
 import Colors from '../../constants/Colors'
+import Options, { imageAssets } from '../../constants/Options'
 
 export default function CourseList(){
     
@@ -13,20 +14,26 @@ export default function CourseList(){
             <Text style={{
                 fontFamily: 'output-bold',
                 fontSize: 25
-            }}>Courses</Text>
+            }}>Courses</Text>ag
 
             <FlatList
                 data={[
-                    {key: 'Tecnica vocal'},
-                    {key: 'Ejercitar voz'},
-                    {key: 'Vocalizacion'},
-                    {key: 'Resonancia'},
-                    {key: 'Intensidad'},
-                    {key: 'Respiración'},
+                    {key: 'Tecnica vocal', banner_image: '/banner1.png'},
+                    {key: 'Ejercitar voz', banner_image: '/banner2.png'},
+                    {key: 'Vocalizacion', banner_image: '/banner3.png'}
+                    //{key: 'Resonancia'},
+                    //{key: 'Intensidad'},
+                    //{key: 'Respiración'},
                     ]}
-                horizontal={true}
+                horizontal={false}
                 renderItem={({item,index}) => (
                     <View> 
+                      <Image source={imageAssets[item.banner_image]}
+                      style = {{
+                        width: '100%',
+                        height: 200,
+                        borderRadius: 15
+                      }} />  
                       <Text>{item.key}</Text>
                     </View>
 

@@ -6,11 +6,10 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
 
-const router = useRouter();
-
 
 export default function Header2(){
     //const {useDetails,setUseDetails}=useContext(UserDetailContext)
+    const router = useRouter();
     
     return (
         <View style={{

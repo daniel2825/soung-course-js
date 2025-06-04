@@ -5,11 +5,10 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
 
-const router = useRouter();
-
 
 export default function Header(){
     //const {useDetails,setUseDetails}=useContext(UserDetailContext)
+    const router = useRouter();
     
     return (
         <View style={{
