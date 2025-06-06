@@ -14,7 +14,7 @@ export default function CourseList(){
             <Text style={{
                 fontFamily: 'output-bold',
                 fontSize: 25
-            }}>Courses</Text>ag
+            }}>Courses</Text>
 
             <FlatList
                 data={[
