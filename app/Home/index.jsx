@@ -1,7 +1,17 @@
-import { Image ,Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Button,Image ,Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
+import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
 
+const SignOutButton = () => {
+  const { signOut } = useAuthenticator();
+
+  return (
+    <View>
+      <Button title="Sign Out" onPress={signOut} />
+    </View>
+  );
+};
 
 const Home = () => {
 
@@ -45,6 +55,8 @@ const router = useRouter();
            onPress={() => router.push('/(tabs)/home')}>
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
+           <SignOutButton />
+
 
       </View>
       

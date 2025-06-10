@@ -19,7 +19,7 @@ export default function Header2(){
             flexDirection: 'row',
             justifyContent: 'space-between'
         }}>
-            <TouchableOpacity onPress={() => router.push('./Home/index')}>
+            <TouchableOpacity onPress={() => router.push('/home')}>
                 <AntDesign name="doubleleft" size={24} color="black" />
             </TouchableOpacity>
             <Text style={{
