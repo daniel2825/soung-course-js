@@ -30,7 +30,6 @@ const App = () => {
   return (
     <Authenticator.Provider>
       <Authenticator socialProviders={['google']}>
-        <SignOutButton />
         <Home />
       </Authenticator>
     </Authenticator.Provider>
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
   },
   signOutButton: {
     alignSelf: "flex-end",
-    display: 'none'
+    //display: 'none'
   },
 });
 
