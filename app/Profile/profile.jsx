@@ -1,14 +1,16 @@
-import { Button ,View, Text,Touchable, TouchableOpacity, StyleSheet} from 'react-native'
+import { Button ,View, Text,Touchable, TouchableOpacity, StyleSheet,RefreshControl} from 'react-native'
 import Colors from '../../constants/Colors'
-import React from 'react'
+import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Header2 from '../../components/Home/header2'
 import { signOut } from 'aws-amplify/auth';
+import { useNavigation } from '@react-navigation/native'; 
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
-
 
 export default function Profile(){
   const router = useRouter();
+  const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
 
   const style = StyleSheet.create({
     button:{
@@ -38,7 +40,7 @@ export default function Profile(){
   async function handleSignOut() {
     try {
       await signOut();
-      // User is now signed out
+      navigation.navigate('index'); 
     } catch (error) {
       console.error('Error signing out:', error);
     }

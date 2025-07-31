@@ -1,18 +1,6 @@
 import { Button,Image ,Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
-import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
-import { signOut } from 'aws-amplify/auth';
-
-const SignOutButton = () => {
-  const { signOut } = useAuthenticator();
-
-  return (
-    <View>
-      <Button style={style.button} title="Salir" onPress={handleSignOut}/>
-    </View>
-  );
-};
 
 const Home = () => {
 
@@ -24,10 +12,7 @@ const router = useRouter();
         backgroundColor: Colors.BLACK
       }}
     >
-
-        <Authenticator.Provider>
-        <SignOutButton />
-      </Authenticator.Provider>
+     
       <Image source={require('../../assets/images/jair-santrich.png')}
         style={{
           width: '100%',
@@ -66,15 +51,6 @@ const router = useRouter();
     </View>
   );
 };
-
-async function handleSignOut() {
-  try {
-    await signOut();
-    // User is now signed out
-  } catch (error) {
-    console.error('Error signing out:', error);
-  }
-}
 
 const style = StyleSheet.create({
   button:{
