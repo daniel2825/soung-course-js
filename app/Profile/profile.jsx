@@ -1,15 +1,13 @@
 import { Button ,View, Text,Touchable, TouchableOpacity, StyleSheet,RefreshControl} from 'react-native'
 import Colors from '../../constants/Colors'
-import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Header2 from '../../components/Home/header2'
 import { signOut } from 'aws-amplify/auth';
 import { useNavigation } from '@react-navigation/native'; 
-import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
+import { Authenticator } from "@aws-amplify/ui-react-native";
 
 export default function Profile(){
   const router = useRouter();
-  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   const style = StyleSheet.create({
