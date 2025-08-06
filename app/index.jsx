@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useRoute } from '@react-navigation/native';
 
 import { Amplify } from "aws-amplify";
-import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
+import { Authenticator } from "@aws-amplify/ui-react-native";
 import Home from "./Home/init";
 
 // https://docs.amplify.aws/react-native/build-a-backend/auth/set-up-auth/

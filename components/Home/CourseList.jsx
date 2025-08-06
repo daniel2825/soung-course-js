@@ -1,8 +1,5 @@
 import {View, Text, Platform, FlatList, Image} from 'react-native'
 import React from 'react'
-import Header from '../../components/Home/header'
-import Button from '../../components/Shared/Button'
-import Colors from '../../constants/Colors'
 import Options, { imageAssets } from '../../constants/Options'
 
 export default function CourseList(){
