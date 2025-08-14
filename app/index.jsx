@@ -5,6 +5,9 @@ import { useRoute } from '@react-navigation/native';
 import { Amplify } from "aws-amplify";
 import { Authenticator } from "@aws-amplify/ui-react-native";
 import Home from "./Home/init";
+import { ApolloProvider } from '@apollo/client';
+import client from '../clients/apolloClient';
+
 
 // https://docs.amplify.aws/react-native/build-a-backend/auth/set-up-auth/
 // https://blog.logrocket.com/aws-amplify-react-native-tutorial-examples/
@@ -25,7 +28,9 @@ const App = () => {
   return (
     <Authenticator.Provider>
       <Authenticator socialProviders={['google']}>
-        <Home />
+        <ApolloProvider client={client}>
+          <Home />
+        </ApolloProvider>
       </Authenticator>
     </Authenticator.Provider>
   );

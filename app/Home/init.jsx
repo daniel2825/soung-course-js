@@ -1,12 +1,37 @@
 import { Button,Image ,Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
+import { gql, useMutation } from '@apollo/client';
+
+const PERSON_MUTATION = gql`
+mutation AddPerson($person: PersonInput!) {
+  addPerson(
+    person: $person
+  ) {
+    name
+  }
+}
+`;
+  
 
 const Home = () => {
+  const [addPerson, { loading, error }] = useMutation(PERSON_MUTATION);
+  function send() {
+    alert("send information"); 
+    addPerson({
+      variables: {
+        person:{
+          name: "profe",
+          email: "daniel2825@hotmail.com",
+        }
+      },
+    });
+  }  
 
 const router = useRouter();
+
   return (
-    <View   
+        <View   
       style={{
         flex: 1,
         backgroundColor: Colors.BLACK
@@ -46,10 +71,12 @@ const router = useRouter();
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
 
+           <Button style={style.button} onPress={send} title="send information"/>
+
       </View>
       
     </View>
-  );
+      );
 };
 
 const style = StyleSheet.create({
