@@ -9,6 +9,4 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-alert("hola apollo");
-
 export default client;

@@ -1,6 +1,7 @@
 import { Button,Image ,Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
+import React, { useEffect } from 'react';
 import { gql, useMutation } from '@apollo/client';
 
 const PERSON_MUTATION = gql`
@@ -16,12 +17,17 @@ mutation AddPerson($person: PersonInput!) {
 
 const Home = () => {
   const [addPerson, { loading, error }] = useMutation(PERSON_MUTATION);
+
+  useEffect(() => {
+    send();
+  }, []);
+
+
   function send() {
-    alert("send information"); 
     addPerson({
       variables: {
         person:{
-          name: "profe",
+          name: "Medico",
           email: "daniel2825@hotmail.com",
         }
       },
@@ -70,8 +76,6 @@ const router = useRouter();
            onPress={() => router.push('/(tabs)/home')}>
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
-
-           <Button style={style.button} onPress={send} title="send information"/>
 
       </View>
       
