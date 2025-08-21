@@ -1,14 +1,14 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { useRoute } from '@react-navigation/native';
 
+import { ImageBackground, Image ,StyleSheet } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { ThemeProvider } from '@aws-amplify/ui-react-native';
 import { Amplify } from "aws-amplify";
 import { Authenticator } from "@aws-amplify/ui-react-native";
 import Home from "./Home/init";
 import { ApolloProvider } from '@apollo/client';
 import client from '../clients/apolloClient';
-import {View, Text, TextInput, Button} from 'react-native'
-
+import { I18n } from 'aws-amplify/utils';
+import { translations } from '@aws-amplify/ui';
 
 // https://docs.amplify.aws/react-native/build-a-backend/auth/set-up-auth/
 // https://blog.logrocket.com/aws-amplify-react-native-tutorial-examples/
@@ -21,65 +21,88 @@ import {View, Text, TextInput, Button} from 'react-native'
 import outputs from "../amplify_outputs.json";
 
 Amplify.configure(outputs);
+// Set default vocabulary and override for English
+I18n.putVocabularies(translations);
+I18n.setLanguage('es');
+I18n.putVocabulariesForLanguage('es', {
+  'Sign In': 'Ingresar',
+  'Sign in': 'Ingresar',
+  'Create Account': 'Crear Cuenta',
+  'Email': 'Correo electrónico',
+  'Password': 'Contraseña',
+  'Forgot Password?': 'Recuperar Contraseña',
+  'Sign Out': 'Salir',
+});
+
+
+const theme = {
+  components: {
+   
+    button: {
+      container: {
+        backgroundColor: '#4c4d50ff', 
+        paddingHorizontal: 20,
+      }
+    },
+    link: {
+      text: {
+        fontSize: 14, // ✅ Link text like "Forgot Password?"
+      },
+    },
+  },
+  tokens: {
+    colors: {
+      white: '#c0c0c0ff',
+      gray: '#353536ff',
+      primary: {
+        80: '#502a11ff'
+      },
+      background: {
+        primary: '{colors.gray}',
+        secondary: '{colors.white}'
+      },
+      font: {
+        primary: '{colors.white}',
+        size: 23,
+        secondary: '{colors.white}',
+        error: '#d7d5ddff',
+        success: '#566957ff'
+      }
+    }
+  }
+}
+
+const formFields = {
+  signUp: {
+    phone_number: {
+      dialCodeList: ['+1', '+123', '+227', '+229']
+    },
+  },
+}
 
 const App = () => {
   const route = useRoute();
   const currentRouteName = route.name;
   console.log("current name",currentRouteName);
 
-  const MySignUp = ({ fields, handleSignUp }) => {
-    // Implement your custom sign-up form with desired fields and validation
-    return (
-      <View>
-        <Text>Custom Sign Up</Text>
-        <TextInput placeholder="Correo" />
-        <TextInput placeholder="Contraseña" secureTextEntry />
-        <TextInput placeholder="Confirmar Contraseña" secureTextEntry />
-        <TextInput placeholder="Nombres" />
-        <TextInput placeholder="Apellidos" />
-        <TextInput placeholder="Fecha de nacimiento" />
-        <Button title="Sign Up" onPress={handleSignUp} />
-      </View>
-    );
-  };
-
-  const myFormFields = {
-    signUp: {
-      email: {
-        label: 'Your Email Address',
-        placeholder: 'Enter your email',
-        required: true,
-      },
-      password: {
-        label: 'Create a Password',
-        placeholder: 'Choose a strong password',
-      },
-      'custom:firstName': { // Example of a custom attribute
-        label: 'First Name',
-        placeholder: 'Enter your first name',
-        required: true,
-      },
-    },
-    // You can also customize signIn, forgotPassword, etc.
-  };
-  
-
   return (
+    <ThemeProvider theme={theme}>
     <Authenticator.Provider>
-      <Authenticator formFields={myFormFields} components={{ SignUp: MySignUp }} socialProviders={['google']}>
-        <ApolloProvider client={client}>
-          <Home />
-        </ApolloProvider>
-      </Authenticator>
-    </Authenticator.Provider>
+        <Authenticator >
+          <ApolloProvider client={client}>
+            <Home />
+          </ApolloProvider>
+        </Authenticator>
+      </Authenticator.Provider>
+    </ThemeProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    padding: 8,
-  }
+    justifyContent: 'center',
+  },
 });
 
 export default App;

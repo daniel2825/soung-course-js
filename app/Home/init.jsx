@@ -1,8 +1,10 @@
 import { Button,Image ,Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { useAuthenticator  } from "@aws-amplify/ui-react-native";
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { gql, useMutation } from '@apollo/client';
+
 
 const PERSON_MUTATION = gql`
 mutation AddPerson($person: PersonInput!) {
@@ -16,6 +18,10 @@ mutation AddPerson($person: PersonInput!) {
   
 
 const Home = () => {
+  const { user } = useAuthenticator();
+
+  const email = user.signInDetails.loginId;
+
   const [addPerson, { loading, error }] = useMutation(PERSON_MUTATION);
 
   useEffect(() => {
@@ -28,7 +34,7 @@ const Home = () => {
       variables: {
         person:{
           name: "Medico",
-          email: "daniel2825@hotmail.com",
+          email: email,
         }
       },
     });
