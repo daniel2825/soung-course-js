@@ -75,7 +75,7 @@ const theme = {
 const formFields = {
   signUp: {
     phone_number: {
-      dialCodeList: ['+1', '+123', '+227', '+229']
+      dialCodeList: ['+1', '+57', '+227', '+229']
     },
   },
 }
@@ -88,7 +88,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
     <Authenticator.Provider>
-        <Authenticator >
+        <Authenticator formFields={formFields} >
           <ApolloProvider client={client}>
             <Home />
           </ApolloProvider>
