@@ -3,40 +3,49 @@ import { useAuthenticator  } from "@aws-amplify/ui-react-native";
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
 
 
-const PERSON_MUTATION = gql`
-mutation AddPerson($person: PersonInput!) {
-  addPerson(
-    person: $person
-  ) {
-    name
-  }
-}
-`;
+const PERSON_QUERY = gql`
+   query GetPerson($email: String!) {
+    getPerson(email: $email) {
+      email
+    }
+  }`;
+
   
 
 const Home = () => {
   const { user } = useAuthenticator();
 
-  const email = user.signInDetails.loginId;
+  const emailInput = user.signInDetails.loginId;
 
-  const [addPerson, { loading, error }] = useMutation(PERSON_MUTATION);
+  var redirectScreen = "";
+ 
+  const [getPerson,{ loading, error, data }] = useLazyQuery(PERSON_QUERY, {
+    onCompleted: () => {
+      
+      redirectScreen = data.getPerson == null ? 
+        '/Personal/' : '/(tabs)/home';
+      alert(redirectScreen);
+    },
+    onError: () => {
+      alert("Not");
+    }
+  
+  });
 
   useEffect(() => {
-    send();
+    getIfexistEmailUser();
   }, []);
 
 
-  function send() {
-    addPerson({
+  function getIfexistEmailUser() {
+
+    getPerson({
       variables: {
-        person:{
-          name: "Medico",
-          email: email,
-        }
-      },
+        email: emailInput
+      }
     });
   }  
 
@@ -79,7 +88,7 @@ const router = useRouter();
            </Text>
 
            <TouchableOpacity style={style.button}
-           onPress={() => router.push('/(tabs)/home')}>
+           onPress={() => router.push(redirectScreen)}>
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
 
