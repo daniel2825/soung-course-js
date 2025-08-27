@@ -2,7 +2,7 @@ import { Button,Image ,Text, View, StyleSheet, TouchableOpacity } from "react-na
 import { useAuthenticator  } from "@aws-amplify/ui-react-native";
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { gql, useLazyQuery } from '@apollo/client';
 
 
@@ -20,14 +20,15 @@ const Home = () => {
 
   const emailInput = user.signInDetails.loginId;
 
-  var redirectScreen = "";
+  const [redirectScreen, setRedirectScreen ] = useState("default");
  
   const [getPerson,{ loading, error, data }] = useLazyQuery(PERSON_QUERY, {
     onCompleted: () => {
       
-      redirectScreen = data.getPerson == null ? 
+      var defineRouteLogic = data == null ? 
         '/Personal/' : '/(tabs)/home';
-      alert(redirectScreen);
+      setRedirectScreen(defineRouteLogic);
+      console.log(redirectScreen);
     },
     onError: () => {
       alert("Not");
@@ -36,18 +37,14 @@ const Home = () => {
   });
 
   useEffect(() => {
-    getIfexistEmailUser();
-  }, []);
-
-
-  function getIfexistEmailUser() {
-
-    getPerson({
+     getPerson({
       variables: {
         email: emailInput
       }
     });
-  }  
+  }, []);
+
+ 
 
 const router = useRouter();
 
@@ -86,9 +83,8 @@ const router = useRouter();
            }}>
             Transforma tu carrera musical
            </Text>
-
            <TouchableOpacity style={style.button}
-           onPress={() => router.push(redirectScreen)}>
+           onPress={() => router.navigate(redirectScreen,{email : emailInput})}>
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
 

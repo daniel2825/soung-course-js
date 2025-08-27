@@ -30,7 +30,7 @@ I18n.putVocabulariesForLanguage('es', {
   'Create Account': 'Crear Cuenta',
   'Email': 'Correo electrónico',
   'Password': 'Contraseña',
-  'Forgot Password?': 'Recuperar Contraseña',
+  'Forgot Password?': 'Olvidaste Contraseña',
   'Sign Out': 'Salir',
 });
 
@@ -40,8 +40,8 @@ const theme = {
    
     button: {
       container: {
-        backgroundColor: '#4c4d50ff', 
-        paddingHorizontal: 20,
+        backgroundColor: '#4c4d50ff',
+        
       }
     },
     link: {
