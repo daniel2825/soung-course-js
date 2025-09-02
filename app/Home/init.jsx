@@ -20,30 +20,40 @@ const Home = () => {
 
   const emailInput = user.signInDetails.loginId;
 
-  const [redirectScreen, setRedirectScreen ] = useState("default");
- 
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const [redirectScreen, setRedirectScreen ] = useState("/default");
+
   const [getPerson,{ loading, error, data }] = useLazyQuery(PERSON_QUERY, {
+    
     onCompleted: () => {
-      
-      var defineRouteLogic = data == null ? 
-        '/Personal/' : '/(tabs)/home';
-      setRedirectScreen(defineRouteLogic);
-      console.log(redirectScreen);
+      sleep(2000);
+      console.log("data",data);
+      setRedirectScreen(data.getPerson === null ? 
+        '/Personal/' : '/(tabs)/home');
+      console.log("what is route",redirectScreen);
+      router.navigate(redirectScreen,{email : emailInput})
     },
     onError: () => {
-      alert("Not");
+      console.log("Not d");
     }
   
   });
 
   useEffect(() => {
-     getPerson({
+  }, []);
+
+
+
+function navigateRegisteredOrNot(){
+    
+    getPerson({
       variables: {
         email: emailInput
       }
-    });
-  }, []);
-
+    }
+  );
+  }
  
 
 const router = useRouter();
@@ -84,7 +94,7 @@ const router = useRouter();
             Transforma tu carrera musical
            </Text>
            <TouchableOpacity style={style.button}
-           onPress={() => router.navigate(redirectScreen,{email : emailInput})}>
+           onPress={() => navigateRegisteredOrNot()}>
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
 
