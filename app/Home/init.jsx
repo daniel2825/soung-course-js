@@ -20,39 +20,40 @@ const Home = () => {
 
   const emailInput = user.signInDetails.loginId;
 
-  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
   const [redirectScreen, setRedirectScreen ] = useState("/default");
 
-  const [getPerson,{ loading, error, data }] = useLazyQuery(PERSON_QUERY, {
-    
-    onCompleted: () => {
-      sleep(2000);
-      console.log("data",data);
-      setRedirectScreen(data.getPerson === null ? 
-        '/Personal/' : '/(tabs)/home');
-      console.log("what is route",redirectScreen);
-      router.navigate(redirectScreen,{email : emailInput})
-    },
-    onError: () => {
-      console.log("Not d");
-    }
-  
-  });
+  const [getPerson,{loading, error, data}] = useLazyQuery(PERSON_QUERY);
 
   useEffect(() => {
+    navigateRegisteredOrNot();
   }, []);
 
 
 
-function navigateRegisteredOrNot(){
+const navigateRegisteredOrNot = async() => {
     
-    getPerson({
-      variables: {
-        email: emailInput
+    try{
+
+      const { data } = await 
+      getPerson({
+        variables: {
+          email: emailInput
+        }
       }
+    );
+
+    console.log("data", data);
+
+    if(data.getPerson === null){
+      setRedirectScreen('/Personal/');
+    }else{
+      setRedirectScreen('/(tabs)/home');
     }
-  );
+
+    }catch(err){
+      console.log("un expected error", err);
+    }
+
   }
  
 
@@ -94,7 +95,7 @@ const router = useRouter();
             Transforma tu carrera musical
            </Text>
            <TouchableOpacity style={style.button}
-           onPress={() => navigateRegisteredOrNot()}>
+           onPress={() => router.navigate(redirectScreen,{email : emailInput})}>
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
 
