@@ -1,7 +1,7 @@
 import { Button,Image ,Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { useAuthenticator  } from "@aws-amplify/ui-react-native";
 import Colors from '../../constants/Colors'
-import { useRouter } from 'expo-router';
+import { router, useNavigation, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { gql, useLazyQuery } from '@apollo/client';
 
@@ -18,7 +18,13 @@ const PERSON_QUERY = gql`
 const Home = () => {
   const { user } = useAuthenticator();
 
-  const emailInput = user.signInDetails.loginId;
+  const navigation = useNavigation();
+
+  const emailInput = user.signInDetails.loginId; 
+
+  const dataToSend = {
+    email: emailInput
+  }
 
   const [redirectScreen, setRedirectScreen ] = useState("/default");
 
@@ -45,9 +51,9 @@ const navigateRegisteredOrNot = async() => {
     console.log("data", data);
 
     if(data.getPerson === null){
-      setRedirectScreen('/Personal/');
+      setRedirectScreen('Personal/index');
     }else{
-      setRedirectScreen('/(tabs)/home');
+      setRedirectScreen('(tabs)');
     }
 
     }catch(err){
@@ -56,8 +62,6 @@ const navigateRegisteredOrNot = async() => {
 
   }
  
-
-const router = useRouter();
 
   return (
         <View   
@@ -95,7 +99,7 @@ const router = useRouter();
             Transforma tu carrera musical
            </Text>
            <TouchableOpacity style={style.button}
-           onPress={() => router.navigate(redirectScreen,{email : emailInput})}>
+           onPress={() => navigation.navigate(redirectScreen,dataToSend)}>
               <Text style={style.buttonText}>Iniciar</Text>
            </TouchableOpacity>
 
