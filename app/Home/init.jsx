@@ -5,7 +5,6 @@ import { router, useNavigation, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { gql, useLazyQuery } from '@apollo/client';
 
-
 const PERSON_QUERY = gql`
    query GetPerson($email: String!) {
     getPerson(email: $email) {
@@ -51,7 +50,7 @@ const navigateRegisteredOrNot = async() => {
     console.log("data", data);
 
     if(data.getPerson === null){
-      setRedirectScreen('Personal/index');
+      setRedirectScreen('Personal');
     }else{
       setRedirectScreen('(tabs)');
     }

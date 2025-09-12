@@ -5,6 +5,7 @@ import { ThemeProvider } from '@aws-amplify/ui-react-native';
 import { Amplify } from "aws-amplify";
 import { Authenticator } from "@aws-amplify/ui-react-native";
 import Home from "./Home/init";
+import MainNavigator from "./Main_navigator/main_navigator"
 import { ApolloProvider } from '@apollo/client';
 import client from '../clients/apolloClient';
 import { I18n } from 'aws-amplify/utils';
@@ -86,15 +87,16 @@ const App = () => {
   console.log("current name",currentRouteName);
 
   return (
-    <ThemeProvider theme={theme}>
-    <Authenticator.Provider>
-        <Authenticator formFields={formFields} >
-          <ApolloProvider client={client}>
-            <Home />
-          </ApolloProvider>
-        </Authenticator>
-      </Authenticator.Provider>
-    </ThemeProvider>
+
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <Authenticator.Provider>
+            <Authenticator formFields={formFields} >
+                <MainNavigator />
+            </Authenticator>
+        </Authenticator.Provider>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 };
 
