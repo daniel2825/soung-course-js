@@ -18,6 +18,7 @@ import { translations } from '@aws-amplify/ui';
 // https://docs.amplify.aws/react-native/start/quickstart/
 // https://www.youtube.com/watch?v=SF4K1kDmHwU
 //https://blog.logrocket.com/aws-amplify-react-native-tutorial-examples/ themes
+// https://docs.amplify.aws/react/build-a-backend/storage/set-up-storage/
 
 import outputs from "../amplify_outputs.json";
 
