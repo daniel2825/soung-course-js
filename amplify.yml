@@ -1,15 +1,16 @@
-version: 1.0
-
+version: 1
 frontend:
   phases:
     preBuild:
       commands:
-      - echo "Skipping frontend build"
+      - nvm install 16
+      - nvm use 16
+      - npm install
     build:
       commands:
-      - echo "No frontend to build"
+      - npm run build
   artifacts:
-    baseDirectory: dummy
+    baseDirectory: build
     files:
     - '**/*'
   cache:
