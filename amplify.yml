@@ -8,9 +8,10 @@ frontend:
       - npm ci
     build:
       commands:
-      - npm run
+      - npx expo install
+      - npx expo export:web
   artifacts:
-    baseDirectory: build
+    baseDirectory: web-build
     files:
     - '**/*'
   cache:
