@@ -48,3 +48,11 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+step to create amplify projec with gen 2: 
+
+1. Create project here. https://docs.amplify.aws/react/start/quickstart/ 
+2. npm create amplify@latest install inside project
+3. npx ampx sandbox to create amplify folder
+4. git push to deploy components for amplify auth appsync storage etc.
+5. npx expo run:android
