@@ -5,7 +5,10 @@ frontend:
       commands:
       - nvm install 18
       - nvm use 18
-      - npm install
+      - npm install -g @aws-amplify/cli
+      - npm ci
+      - amplify pull --yes --env ${AWS_BRANCH}
+      - amplify push --yes
     build:
       commands:
       - echo "No frontend to build"
@@ -16,5 +19,3 @@ frontend:
   cache:
     paths:
     - node_modules/**/*
-
-    version: 1.0
