@@ -1,19 +1,6 @@
 version: 1.0
-frontend:
+backend:
   phases:
-    preBuild:
-      commands:
-      - nvm install 18
-      - nvm use 18
-      - npm ci
     build:
       commands:
-      - npx expo install
-      - npx expo export:web
-  artifacts:
-    baseDirectory: web-build
-    files:
-    - '**/*'
-  cache:
-    paths:
-    - node_modules/**/*
+      - amplifyPush --simple
