@@ -8,7 +8,7 @@ frontend:
       - npm ci
     build:
       commands:
-      - npm run build
+      - npm run
   artifacts:
     baseDirectory: build
     files:
