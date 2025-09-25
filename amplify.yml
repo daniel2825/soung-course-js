@@ -1,4 +1,21 @@
 version: 1.0
+
+frontend:
+  phases:
+    preBuild:
+      commands:
+      - echo "Skipping frontend build"
+    build:
+      commands:
+      - echo "No frontend to build"
+  artifacts:
+    baseDirectory: dummy
+    files:
+    - '**/*'
+  cache:
+    paths:
+    - node_modules/**/*
+
 backend:
   phases:
     build:
