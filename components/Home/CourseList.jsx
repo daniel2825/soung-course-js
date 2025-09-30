@@ -1,9 +1,22 @@
 import {View, Text, Platform, FlatList, Image} from 'react-native'
 import React from 'react'
-import Options, { imageAssets } from '../../constants/Options'
+import { imageAssets } from '../../constants/Options'
+import { Storage } from 'aws-amplify';
 
 export default function CourseList(){
-    
+
+    const getFile = async (fileName) => {
+        try {
+          const signedUrl = await Storage.get(fileName); // returns a signed URL
+          console.log('File URL:', signedUrl);
+          // You can now open this URL or display it in your app
+        } catch (err) {
+          console.error('Error getting file:', err);
+        }
+      };
+
+    getFile("jairsantrich.png");
+
     return (
         <View style={{
             padding: 10
