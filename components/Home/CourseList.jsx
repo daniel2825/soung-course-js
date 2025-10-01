@@ -1,21 +1,61 @@
 import {View, Text, Platform, FlatList, Image} from 'react-native'
-import React from 'react'
 import { imageAssets } from '../../constants/Options'
-import { Storage } from 'aws-amplify';
+import { getUrl } from '@aws-amplify/storage';
+import { StorageImage } from '@aws-amplify/ui-react-storage';
+import React, { useEffect, useState } from 'react';
+import { BannerItems } from '../../model/BannerItems'; 
 
-export default function CourseList(){
+const CourseList = () => {
 
-    const getFile = async (fileName) => {
-        try {
-          const signedUrl = await Storage.get(fileName); // returns a signed URL
-          console.log('File URL:', signedUrl);
-          // You can now open this URL or display it in your app
-        } catch (err) {
-          console.error('Error getting file:', err);
-        }
-      };
+  
+    const [items, setItems] = useState<BannerItems>([]);
 
-    getFile("jairsantrich.png");
+/*
+    [
+                    {key: 'Tecnica vocal', banner_image: 'images/banner1.png'},
+                    {key: 'Ejercitar voz', banner_image: 'images/banner2.png'},
+                    {key: 'Vocalizacion', banner_image: 'images/banner3.png'}
+                    //{key: 'Resonancia'},
+                    //{key: 'Intensidad'},
+                    //{key: 'Respiración'},
+                    ]*/
+    
+    useEffect(() => {
+        getFileUrl("Tecnica vocal","images/banner1.png");
+        getFileUrl("Ejercitar voz","images/banner2.png");
+        getFileUrl("Vocalizacion","images/banner3.png");
+      }, []);
+
+    const getFileUrl = async (key,path) => {
+      try {
+        const urlResult = await getUrl({ path });
+        addItem(key,String(urlResult.url))
+        return String(urlResult); // this is the signed URL (string)
+      } catch (error) {
+        console.error('Error getting file URL:', error);
+        return null;
+      }
+    };
+
+    const addItem = (key, banner) => {
+    const newItem = {
+      key: key,
+      banner_image: banner,
+    };
+    setBannerList([newItem]);
+    console.log(banner, typeof banner);
+  };
+
+    
+/*
+    if(!banner){
+      return <Text style={{
+                fontFamily: 'output-bold',
+                fontSize: 25
+            }}>loading</Text>;
+    }*/
+
+
 
     return (
         <View style={{
@@ -25,20 +65,20 @@ export default function CourseList(){
                 fontFamily: 'output-bold',
                 fontSize: 25
             }}>Courses</Text>
+            {/*
+            <Image source={{uri: banner}}
+                      style = {{
+                        width: '100%',
+                        height: 200,
+                        borderRadius: 15
+                      }} />*/}
 
-            <FlatList
-                data={[
-                    {key: 'Tecnica vocal', banner_image: '/banner1.png'},
-                    {key: 'Ejercitar voz', banner_image: '/banner2.png'},
-                    {key: 'Vocalizacion', banner_image: '/banner3.png'}
-                    //{key: 'Resonancia'},
-                    //{key: 'Intensidad'},
-                    //{key: 'Respiración'},
-                    ]}
+             <FlatList
+                data={banner}
                 horizontal={false}
                 renderItem={({item,index}) => (
                     <View> 
-                      <Image source={imageAssets[item.banner_image]}
+                      <Image source={{uri: imageAssets[item.banner_image]}}
                       style = {{
                         width: '100%',
                         height: 200,
@@ -53,3 +93,5 @@ export default function CourseList(){
         </View>
     )
 }
+
+export default CourseList;

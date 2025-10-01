@@ -105,5 +105,26 @@
       "nonModels": {}
     }
   },
+  "storage": {
+    "aws_region": "us-west-1",
+    "bucket_name": "amplify-d1q7yw091jwae4-ma-songcoursecontentbucketc-0naz9if3cy8t",
+    "buckets": [
+      {
+        "name": "SongCourseContent",
+        "bucket_name": "amplify-d1q7yw091jwae4-ma-songcoursecontentbucketc-0naz9if3cy8t",
+        "aws_region": "us-west-1",
+        "paths": {
+          "images/*": {
+            "authenticated": [
+              "get",
+              "list",
+              "write",
+              "delete"
+            ]
+          }
+        }
+      }
+    ]
+  },
   "version": "1.3"
 }
