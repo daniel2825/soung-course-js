@@ -1,5 +1,4 @@
 import {View, Text, Platform, FlatList, Image} from 'react-native'
-import { imageAssets } from '../../constants/Options'
 import { getUrl } from '@aws-amplify/storage';
 import { StorageImage } from '@aws-amplify/ui-react-storage';
 import React, { useEffect, useState } from 'react';
@@ -7,8 +6,8 @@ import { BannerItems } from '../../model/BannerItems';
 
 const CourseList = () => {
 
-  
-    const [items, setItems] = useState<BannerItems>([]);
+    const [banners, setBanners] = useState([]);
+    
 
 /*
     [
@@ -21,9 +20,11 @@ const CourseList = () => {
                     ]*/
     
     useEffect(() => {
+        setBanners([]);
         getFileUrl("Tecnica vocal","images/banner1.png");
         getFileUrl("Ejercitar voz","images/banner2.png");
         getFileUrl("Vocalizacion","images/banner3.png");
+        setBanners([]);
       }, []);
 
     const getFileUrl = async (key,path) => {
@@ -42,7 +43,7 @@ const CourseList = () => {
       key: key,
       banner_image: banner,
     };
-    setBannerList([newItem]);
+    setBanners([...banners, newItem]);
     console.log(banner, typeof banner);
   };
 
@@ -74,11 +75,11 @@ const CourseList = () => {
                       }} />*/}
 
              <FlatList
-                data={banner}
+                data={banners}
                 horizontal={false}
                 renderItem={({item,index}) => (
                     <View> 
-                      <Image source={{uri: imageAssets[item.banner_image]}}
+                      <Image source={{uri: item.banner_image}}
                       style = {{
                         width: '100%',
                         height: 200,
