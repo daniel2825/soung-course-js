@@ -12,8 +12,9 @@ const CourseList = () => {
 
     const bannerPaths = [
     'images/banner1.jpg',
-    'images/banner2.jpg',
-    'images/banner3.jpg'
+    'images/banner2.png',
+    'images/banner3.jpg',
+    'images/banner4.jpg'
   ];
     
 
@@ -41,10 +42,9 @@ const CourseList = () => {
           const { url } = await getUrl({
             path,
             options: {
-              accessLevel: 'public', // 👈 Important: Do NOT prefix key with "public/"
+              accessLevel: 'public',
             },
           });
-          console.log(url.href);
           return { path, url: url.href };
         })
       );
@@ -67,7 +67,7 @@ const CourseList = () => {
         style={styles.image}
         resizeMode={FastImage.resizeMode.cover}
       />
-      <Text style={styles.text}>{item.key}</Text>
+      <Text style={styles.text}>{item.path}</Text>
     </View>
   );
 
@@ -84,24 +84,25 @@ const CourseList = () => {
                 fontFamily: 'output-bold',
                 fontSize: 25
             }}>Courses</Text>
+            
             {/*
-            <Image source={{uri: banner}}
+            <Image source={{uri: banners.url}}
                       style = {{
                         width: '100%',
                         height: 200,
                         borderRadius: 15
-                      }} />*/}
-
+                      }} />
+                 */   }       
              <FlatList
-      data={images}
-      keyExtractor={(item) => item.key}
-      renderItem={renderItem}
-      contentContainerStyle={styles.listContent}
-      initialNumToRender={3}
-      maxToRenderPerBatch={5}
-      windowSize={7}
-      removeClippedSubviews={true}
-    />
+                data={banners}
+                keyExtractor={(item) => item.path}
+                renderItem={renderItem}
+                contentContainerStyle={styles.listContent}
+                initialNumToRender={3}
+                maxToRenderPerBatch={5}
+                windowSize={7}
+                removeClippedSubviews={true}
+              />
         </View>
     )
 }
