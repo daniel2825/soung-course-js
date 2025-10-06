@@ -3,53 +3,42 @@ import FastImage from 'react-native-fast-image';
 import { getUrl } from '@aws-amplify/storage';
 import { StorageImage } from '@aws-amplify/ui-react-storage';
 import React, { useEffect, useState } from 'react';
-import { BannerItems } from '../../model/BannerItems'; 
-
 const CourseList = () => {
 
-    const [banners, setBanners] = useState([]);
+    const [contentsToShow, setContentsToShow] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [bannerPaths, setBannerPaths] = useState([]);
 
-    const bannerPaths = [
-    'images/banner1.jpg',
-    'images/banner2.png',
-    'images/banner3.jpg',
-    'images/banner4.jpg'
+
+  const courses_list = [
+    {title: 'Tecnica vocal', banner_image: 'images/banner1.jpg'},
+    {title: 'Ejercitar voz', banner_image: 'images/banner2.png'},
+    {title: 'Vocalizacion', banner_image: 'images/banner3.jpg'},
+    {title: 'Resonancia', banner_image: 'images/banner4.jpg'}
   ];
-    
 
-/*
-    [
-                    {key: 'Tecnica vocal', banner_image: 'images/banner1.png'},
-                    {key: 'Ejercitar voz', banner_image: 'images/banner2.png'},
-                    {key: 'Vocalizacion', banner_image: 'images/banner3.png'}
-                    //{key: 'Resonancia'},
-                    //{key: 'Intensidad'},
-                    //{key: 'Respiración'},
-                    ]*/
-    
     useEffect(() => {
 
-        getFileUrl();
-      //  getFileUrl("Ejercitar voz","images/banner2.jpg");
-      //  getFileUrl("Vocalizacion","images/banner3.jpg");
+      getFileUrl();
+      
       }, []);
 
     const getFileUrl = async () => {
-    try {
+      courses_list.map(item => {setBannerPaths(bannerPaths.push(item.banner_image))});
+      try {
       const urls = await Promise.all(
         bannerPaths.map(async (path) => {
+          const search_title = courses_list.find(item => item.banner_image === path);
           const { url } = await getUrl({
             path,
             options: {
               accessLevel: 'public',
             },
           });
-          return { path, url: url.href };
+          return { title: search_title.title, path, url: url.href };
         })
       );
-      
-      setBanners(urls);
+      setContentsToShow(urls);
     } catch (error) {
       console.error('Error fetching image URLs:', error);
     } finally {
@@ -67,7 +56,7 @@ const CourseList = () => {
         style={styles.image}
         resizeMode={FastImage.resizeMode.cover}
       />
-      <Text style={styles.text}>{item.path}</Text>
+      <Text style={styles.text}>{item.title}</Text>
     </View>
   );
 
@@ -84,17 +73,9 @@ const CourseList = () => {
                 fontFamily: 'output-bold',
                 fontSize: 25
             }}>Courses</Text>
-            
-            {/*
-            <Image source={{uri: banners.url}}
-                      style = {{
-                        width: '100%',
-                        height: 200,
-                        borderRadius: 15
-                      }} />
-                 */   }       
+       
              <FlatList
-                data={banners}
+                data={contentsToShow}
                 keyExtractor={(item) => item.path}
                 renderItem={renderItem}
                 contentContainerStyle={styles.listContent}
@@ -127,7 +108,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 8,
-    color: '#333',
+    color: '#ffffff',
     fontSize: 16,
   },
 });
