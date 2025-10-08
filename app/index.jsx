@@ -4,7 +4,6 @@ import { useRoute } from '@react-navigation/native';
 import { ThemeProvider } from '@aws-amplify/ui-react-native';
 import { Amplify } from "aws-amplify";
 import { Authenticator } from "@aws-amplify/ui-react-native";
-import Home from "./Home/init";
 import MainNavigator from "./Main_navigator/main_navigator"
 import { ApolloProvider } from '@apollo/client';
 import client from '../clients/apolloClient';

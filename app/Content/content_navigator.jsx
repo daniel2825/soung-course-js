@@ -1,20 +1,19 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import Home from "../Home/init";
+import CourseList from "./CourseList";
 import ContentCourse from "../Content/content"
-import Personal from "../Home";
 
 const Stack = createNativeStackNavigator();
 
-const MainNavigator = () => {
+const ContentNavigator = () => {
   return (
-      <Stack.Navigator initialRouteName="Home"
+      <Stack.Navigator initialRouteName="CourseList"
                        screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Personal" component={Personal} />
+        <Stack.Screen name="CourseList" component={CourseList} />
+        <Stack.Screen name="ContentCourse" component={ContentCourse} />
       </Stack.Navigator>
   );
 };
 
-export default MainNavigator;
+export default ContentNavigator;

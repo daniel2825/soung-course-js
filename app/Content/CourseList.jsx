@@ -1,13 +1,16 @@
-import {View, Text, Platform,ActivityIndicator, FlatList,StyleSheet ,Image} from 'react-native'
+import {View, Text, Platform,ActivityIndicator, FlatList,StyleSheet ,TouchableOpacity} from 'react-native'
 import FastImage from 'react-native-fast-image';
 import { getUrl } from '@aws-amplify/storage';
-import { StorageImage } from '@aws-amplify/ui-react-storage';
+import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+
 const CourseList = () => {
 
     const [contentsToShow, setContentsToShow] = useState([]);
     const [loading, setLoading] = useState(true);
     const [bannerPaths, setBannerPaths] = useState([]);
+
+  const navigation = useNavigation();
 
 
   const courses_list = [
@@ -48,6 +51,10 @@ const CourseList = () => {
 
       const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
+      <TouchableOpacity
+           onPress={() => navigation.navigate('ContentCourse',{
+            titlecourse: item.title
+          })}>
       <FastImage
         source={{
           uri: item.url,
@@ -57,6 +64,7 @@ const CourseList = () => {
         resizeMode={FastImage.resizeMode.cover}
       />
       <Text style={styles.text}>{item.title}</Text>
+      </TouchableOpacity>
     </View>
   );
 
