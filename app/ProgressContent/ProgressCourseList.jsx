@@ -4,7 +4,7 @@ import { getUrl } from '@aws-amplify/storage';
 import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 
-const CourseList = () => {
+const ProgressCourseList = () => {
 
     const [contentsToShow, setContentsToShow] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -14,6 +14,8 @@ const CourseList = () => {
 
 
   const courses_list = [
+    {title: 'Tecnica vocal', banner_image: 'images/banner1.jpg'},
+    {title: 'Ejercitar voz', banner_image: 'images/banner2.png'},
     {title: 'Vocalizacion', banner_image: 'images/banner3.jpg'},
     {title: 'Resonancia', banner_image: 'images/banner4.jpg'}
   ];
@@ -50,7 +52,7 @@ const CourseList = () => {
       const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <TouchableOpacity
-           onPress={() => navigation.navigate('ContentCourse',{
+           onPress={() => navigation.navigate('ProgressContentCourse',{
             titlecourse: item.title
           })}>
       <FastImage
@@ -78,7 +80,7 @@ const CourseList = () => {
             <Text style={{
                 fontFamily: 'output-bold',
                 fontSize: 25
-            }}>Tus cursos</Text>
+            }}>Explora todos los cursos</Text>
        
              <FlatList
                 data={contentsToShow}
@@ -120,4 +122,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default CourseList;
+export default ProgressCourseList;

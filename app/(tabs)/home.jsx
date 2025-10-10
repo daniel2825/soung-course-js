@@ -1,11 +1,8 @@
 import {View, Text, Platform,StyleSheet} from 'react-native'
 import React from 'react'
 import Header from '../../components/Home/header'
-import Button from '../../components/Shared/Button'
 import Colors from '../../constants/Colors'
-import Courses from '../Content/CourseList'
 import ContentNavigator from '../Content/content_navigator'
-import NoCourses from '../Content/NoCourses'
 
 const Home = () => {
 

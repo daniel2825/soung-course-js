@@ -4,7 +4,7 @@ import React from 'react'
 import Header from '../../components/Home/header'
 import Colors from '../../constants/Colors'
 
-const ContentCourse = () => {
+const ProgresscontentCourse = () => {
     const route = useRoute();
     const { titlecourse } = route.params;
     console.log('Title course:', titlecourse);
@@ -23,4 +23,4 @@ const ContentCourse = () => {
     );
   };
   
-  export default ContentCourse;
+  export default ProgresscontentCourse;
