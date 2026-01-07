@@ -26,11 +26,13 @@ export default function TabLayout(){
                 tabBarIcon:({color,size})=><Ionicons name="bar-chart" size={size} color={color} />,
                 tabBarLabel: "Mi progreso" 
             }} />
+            {/*
             <Tabs.Screen name='fans' 
             options={{
                 tabBarIcon:({color,size})=><Ionicons name="people-circle" size={size} color={color} />,
                 tabBarLabel: "Fans" 
             }}/>
+            */}
         </Tabs>
     )
 
