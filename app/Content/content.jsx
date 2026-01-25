@@ -1,16 +1,23 @@
-import {View, Text, Platform,StyleSheet} from 'react-native'
 import { useRoute } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { getUrl } from '@aws-amplify/storage';
+import { View,Text, SafeAreaView, Platform, FlatList, StyleSheet, Dimensions } from 'react-native';
 import Video from 'react-native-video';
 
-import Header from '../../components/Home/header'
-import Colors from '../../constants/Colors'
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const ContentCourse = () => {
     const route = useRoute();
     const { titlecourse } = route.params;
-    const [videoUri, setVideoUri] = useState(null);
+    const [contentsToShow, setContentsToShow] = useState([]);
+    
+
+    const video_list = [
+    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/JairS.mp4', id_course:"a"}
+   ];
+
+    const [videoUris, setVideoUris] = useState([]);
+    
     console.log('Title course:', titlecourse);
 
      useEffect(() => {
@@ -20,17 +27,21 @@ const ContentCourse = () => {
           }, []);
 
     const getFileUrl = async () => {
-          path = "videos/JairS.mp4"
+          video_list.map(item => {setVideoUris(videoUris.push(item.banner_video))});
           try {
-              const { url } = await getUrl({
-                path,
-                options: {
-                  accessLevel: 'public',
-                },
-              });
-          console.log("hello video",url);
-          setVideoUri(url.href);
-          
+              const urls = await Promise.all(
+                videoUris.map(async (path) => {
+                  const { url } = await getUrl({
+                    path,
+                    options:{
+                      accessLevel: 'public'
+                    }
+                  });
+                  console.log("hello video",url);
+                  return {path, url: url.href}
+                })
+              );
+          setContentsToShow(urls);
         } catch (error) {
           console.error('Error fetching image URLs:', error);
         } finally {
@@ -38,9 +49,18 @@ const ContentCourse = () => {
         }
       };
 
-      if (!videoUri) {
+      if (!videoUris) {
             return <View style={styles.container}><Text>Loading video...</Text></View>;
         }
+
+    const renderVideos = ({ item }) => (
+                <Video
+                    source={{ uri: item.url }}
+                    style={styles.backgroundVideo}
+                    controls={true} // Add playback controls
+                    resizeMode="contain" // Or "cover", "stretch"
+                />
+    );        
 
     return (
         <View style={styles.container}>
@@ -48,13 +68,18 @@ const ContentCourse = () => {
                 fontFamily: 'output-bold',
                 fontSize: 25
             }}>Video import</Text>
-            <Video
-                    source={{ uri: videoUri }}
-                    style={styles.backgroundVideo}
-                    controls={true} // Add playback controls
-                    resizeMode="contain" // Or "cover", "stretch"
-                />
-            
+          {   
+          <FlatList
+                          data={contentsToShow}
+                          keyExtractor={(item) => item.path}
+                          renderItem={renderVideos}
+                          contentContainerStyle={styles.listContent}
+                          initialNumToRender={3}
+                          maxToRenderPerBatch={5}
+                          windowSize={7}
+                          removeClippedSubviews={true}
+                        />
+            }
         </View>
     );
   };
@@ -73,6 +98,12 @@ const ContentCourse = () => {
             bottom: 0,
             right: 0,
         },
+        videoPlayer: {
+          width: SCREEN_WIDTH,
+          height: 300, // Adjust height as needed
+          marginVertical: 8,
+        }
+
     });
   
   export default ContentCourse;

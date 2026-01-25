@@ -14,10 +14,8 @@ const ProgressCourseList = () => {
 
 
   const courses_list = [
-    {title: 'Tecnica vocal', banner_image: 'images/banner1.jpg'},
-    {title: 'Ejercitar voz', banner_image: 'images/banner2.png'},
-    {title: 'Vocalizacion', banner_image: 'images/banner3.jpg'},
-    {title: 'Resonancia', banner_image: 'images/banner4.jpg'}
+    {title: 'Tecnica vocal', banner_image: 'images/tecnica_vocal/banner1.jpg'},
+    {title: 'Ejercitar voz', banner_image: 'images/banner2.png'}
   ];
 
     useEffect(() => {

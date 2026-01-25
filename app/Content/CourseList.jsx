@@ -14,8 +14,10 @@ const CourseList = () => {
 
 
   const courses_list = [
-    {title: 'Vocalizacion', banner_image: 'images/banner3.jpg'},
-    {title: 'Resonancia', banner_image: 'images/banner4.jpg'}
+    {title: 'Tecnica vocal', banner_image: 'images/tecnica_vocal/banner1.jpg', id_course:"a"},
+    {title: 'Vocalizacion', banner_image: 'images/banner3.jpg', id_course:"b"},
+    {title: 'Resonancia', banner_image: 'images/banner4.jpg', id_course:"c"},
+    {title: 'Tecnica vocal', banner_image: 'images/tecnica_vocal/doctoraliaopt.jpg', id_course:"d"},
   ];
 
     useEffect(() => {
