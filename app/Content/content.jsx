@@ -1,6 +1,7 @@
 import { useRoute } from '@react-navigation/native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getUrl } from '@aws-amplify/storage';
+import VideoItem from '../../components/Video/videoItem'
 import { View,Text, SafeAreaView, Platform, FlatList, StyleSheet, Dimensions } from 'react-native';
 import Video from 'react-native-video';
 
@@ -13,7 +14,9 @@ const ContentCourse = () => {
     
 
     const video_list = [
-    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/JairS.mp4', id_course:"a"}
+    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/JairS.mp4', id_course:"a"},
+    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/JairPrese', id_course:"a"}
+
    ];
 
     const [videoUris, setVideoUris] = useState([]);
@@ -41,7 +44,9 @@ const ContentCourse = () => {
                   return {path, url: url.href}
                 })
               );
+          console.log("url ss",urls);
           setContentsToShow(urls);
+          console.log(contentsToShow);
         } catch (error) {
           console.error('Error fetching image URLs:', error);
         } finally {
@@ -53,57 +58,55 @@ const ContentCourse = () => {
             return <View style={styles.container}><Text>Loading video...</Text></View>;
         }
 
-    const renderVideos = ({ item }) => (
-                <Video
-                    source={{ uri: item.url }}
-                    style={styles.backgroundVideo}
-                    controls={true} // Add playback controls
-                    resizeMode="contain" // Or "cover", "stretch"
-                />
+    const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(0);
+    const flatListRef = useRef(null);
+      
+    
+    const onViewableItemsChanged = useCallback(({ viewableItems }) => {
+          if (viewableItems && viewableItems.length > 0) {
+            setCurrentlyPlayingIndex(viewableItems[0].index);
+          }
+        }, []);    
+
+    const viewabilityConfig = {
+          itemVisiblePercentThreshold: 70, // Play the video when 70% of it is visible
+    };
+      
+
+    const renderVideos = ({ item, index }) => (
+  
+      <View>
+          <Text style={styles.videoTitle}>{item.title}</Text>
+          <VideoItem
+            source={item.url}
+            isPaused={index !== currentlyPlayingIndex} // Pause if not the current one
+          />
+    </View>
     );        
 
     return (
-        <View style={styles.container}>
-            <Text style={{
-                fontFamily: 'output-bold',
-                fontSize: 25
-            }}>Video import</Text>
-          {   
-          <FlatList
-                          data={contentsToShow}
-                          keyExtractor={(item) => item.path}
-                          renderItem={renderVideos}
-                          contentContainerStyle={styles.listContent}
-                          initialNumToRender={3}
-                          maxToRenderPerBatch={5}
-                          windowSize={7}
-                          removeClippedSubviews={true}
-                        />
-            }
-        </View>
+      <FlatList
+        ref={flatListRef}
+        data={contentsToShow}
+        renderItem={renderVideos}
+        keyExtractor={(item) => item.url}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        showsVerticalScrollIndicator={false}
+        snapToInterval={300 + 16} // (Video height + margin/padding) for TikTok-like snapping
+        snapToAlignment={"start"}
+        decelerationRate={"fast"}
+      />
     );
   };
 
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        backgroundVideo: {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-        },
-        videoPlayer: {
-          width: SCREEN_WIDTH,
-          height: 300, // Adjust height as needed
-          marginVertical: 8,
-        }
-
-    });
+  const styles = StyleSheet.create({
+    videoTitle: {
+      padding: 10,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+  });
   
   export default ContentCourse;
