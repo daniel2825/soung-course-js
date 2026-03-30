@@ -78,7 +78,7 @@ const ProgressCourseList = () => {
             <Text style={{
                 fontFamily: 'output-bold',
                 fontSize: 25
-            }}>Explora todos los cursos</Text>
+            }}>Tus cursos</Text>
        
              <FlatList
                 data={contentsToShow}

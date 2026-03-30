@@ -2,7 +2,7 @@ import {View, Text, Platform,StyleSheet} from 'react-native'
 import React from 'react'
 import Header from '../../components/Home/header'
 import Colors from '../../constants/Colors'
-import ContentNavigator from '../Content/content_navigator'
+import ProgressContentNavigator from '../ProgressContent/Progress_content_navigator'
 
 const Home = () => {
 
@@ -12,9 +12,7 @@ const Home = () => {
             height: '100%',
         }}>
             <Header/>
-            <ContentNavigator/>
-
-            
+            <ProgressContentNavigator />          
         </View>
     );
   };

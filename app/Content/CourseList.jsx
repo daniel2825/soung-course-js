@@ -80,7 +80,7 @@ const CourseList = () => {
             <Text style={{
                 fontFamily: 'output-bold',
                 fontSize: 25
-            }}>Tus cursos</Text>
+            }}>Exlora todos los cursos</Text>
        
              <FlatList
                 data={contentsToShow}
