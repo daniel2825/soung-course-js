@@ -14,8 +14,8 @@ const ContentCourse = () => {
     
 
     const video_list = [
-    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/JairS.mp4', id_course:"a"},
-    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/JairPrese', id_course:"a"}
+    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/jair-santrich.mp4', id_course:"a"},
+    {title: 'Tecnica vocal', banner_video: 'videos/prueba/JairS.mp4', id_course:"a"},
 
    ];
 
