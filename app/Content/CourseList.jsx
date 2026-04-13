@@ -3,9 +3,9 @@ import FastImage from 'react-native-fast-image';
 import { getUrl } from '@aws-amplify/storage';
 import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { generateClient } from 'aws-amplify/data';
+//import { generateClient } from 'aws-amplify/data';
 
-const client = generateClient();
+//const client = generateClient();
 
 const CourseList = () => {
 
@@ -14,7 +14,7 @@ const CourseList = () => {
     const [bannerPaths, setBannerPaths] = useState([]);
 
   const navigation = useNavigation();
-
+/*
   const getData = async () => {
   
   console.log("1. Starting request..."); 
@@ -30,7 +30,7 @@ const CourseList = () => {
     console.error("4. Catch block triggered:", err);
   }
 
-};
+};*/
 
   const courses_list = [
     {title: 'Tecnica vocal', banner_image: 'images/tecnica_vocal/banner3.png', id_course:"a"},
@@ -39,7 +39,7 @@ const CourseList = () => {
 
     useEffect(() => {
 
-      getData();
+      //getData();
       getFileUrl();
       
 
