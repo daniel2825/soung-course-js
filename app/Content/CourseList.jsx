@@ -3,6 +3,9 @@ import FastImage from 'react-native-fast-image';
 import { getUrl } from '@aws-amplify/storage';
 import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
+import { generateClient } from 'aws-amplify/data';
+
+const client = generateClient();
 
 const CourseList = () => {
 
@@ -12,6 +15,22 @@ const CourseList = () => {
 
   const navigation = useNavigation();
 
+  const getData = async () => {
+  
+  console.log("1. Starting request..."); 
+  try {
+    console.log("Is model defined?", !!client.models.SongCourseContent);
+    const response = await client.models.SongCourseContent.list();
+    console.log("2. Response received:", response);
+    
+    const { data, errors } = response;
+    if (errors) console.error("3. Errors found:", errors);
+    return data;
+  } catch (err) {
+    console.error("4. Catch block triggered:", err);
+  }
+
+};
 
   const courses_list = [
     {title: 'Tecnica vocal', banner_image: 'images/tecnica_vocal/banner3.png', id_course:"a"},
@@ -20,8 +39,10 @@ const CourseList = () => {
 
     useEffect(() => {
 
+      getData();
       getFileUrl();
       
+
       }, []);
 
     const getFileUrl = async () => {
