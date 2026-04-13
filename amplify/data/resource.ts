@@ -3,7 +3,6 @@ import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 const schema = a.schema({
   SongCourseContent: a
     .model({
-      id: a.string(),
       banner_image: a.string(),
       title: a.string()
     })
