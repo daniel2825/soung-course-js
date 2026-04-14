@@ -4,6 +4,8 @@ const schema = a.schema({
   SongCourseContent: a
     .model({
       content: a.string(),
+      title: a.string(),
+      banner_image: a.string(),
     })
     .authorization((allow) => [allow.guest()]),
 });
