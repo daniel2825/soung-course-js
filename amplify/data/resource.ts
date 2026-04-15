@@ -16,7 +16,7 @@ const schema = a.schema({
       videos: a.ref('Videos').array()
       
     })
-    .authorization((allow) => [allow.publicApiKey()]),
+    .authorization((allow) => [allow.authenticated()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
