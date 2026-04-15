@@ -22,6 +22,8 @@ const CourseList = () => {
     console.log("Is model defined?", !!client.models.SongCourseContent);
     const response = await client.models.SongCourseContent.list();
     console.log("2. Response received:", response);
+
+    console.log("2. Response received:", response.data);
     
     const { data, errors } = response;
     if (errors) console.error("3. Errors found:", errors);
