@@ -9,19 +9,18 @@ const client = generateClient();
 
 const CourseList = () => {
 
-    const [contentsToShow, setContentsToShow] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [bannerPaths, setBannerPaths] = useState([]);
-
+  const [contentsToShow, setContentsToShow] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [bannerPaths, setBannerPaths] = useState([]);
   const navigation = useNavigation();
 
-  const getData = async () => {
+  const getAllCourses = async () => {
   
   console.log("1. Starting request..."); 
   try {
-    console.log("Is model defined?", !!client.models.SongCourseContent);
+   // console.log("Is model defined?", !!client.models.SongCourseContent);
     const response = await client.models.SongCourseContent.list();
-    console.log("2. Response received:", response);
+   // console.log("2. Response received:", response);
 
     console.log("2. Response received:", response.data);
     
@@ -33,21 +32,24 @@ const CourseList = () => {
   }
 
 };
-
+/*
   const courses_list = [
     {title: 'Tecnica vocal', banner_image: 'images/tecnica_vocal/banner3.png', id_course:"a"},
     {title: 'Tecnica vocal', banner_image: 'images/doctoralia/doctoralia.jpeg', id_course:"d"},
-  ];
+  ];*/
 
     useEffect(() => {
-
-      getData();
-      getFileUrl();
-      
-
+      syncAllCourses();
       }, []);
 
-    const getFileUrl = async () => {
+    const syncAllCourses = async () => {
+      const courses_list = await getAllCourses();
+      console.log("all courses await", courses_list);
+      getFileUrl(courses_list);
+    }
+
+    const getFileUrl = async (courses_list) => {
+
       courses_list.map(item => {setBannerPaths(bannerPaths.push(item.banner_image))});
       try {
       const urls = await Promise.all(
