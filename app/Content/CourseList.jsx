@@ -18,10 +18,9 @@ const CourseList = () => {
   
   console.log("1. Starting request..."); 
   try {
-   // console.log("Is model defined?", !!client.models.SongCourseContent);
+    console.log("Is model defined?", !!client.models.SongCourseContent);
     const response = await client.models.SongCourseContent.list();
-   // console.log("2. Response received:", response);
-
+   
     console.log("2. Response received:", response.data);
     
     const { data, errors } = response;
@@ -32,11 +31,6 @@ const CourseList = () => {
   }
 
 };
-/*
-  const courses_list = [
-    {title: 'Tecnica vocal', banner_image: 'images/tecnica_vocal/banner3.png', id_course:"a"},
-    {title: 'Tecnica vocal', banner_image: 'images/doctoralia/doctoralia.jpeg', id_course:"d"},
-  ];*/
 
     useEffect(() => {
       syncAllCourses();
@@ -54,14 +48,16 @@ const CourseList = () => {
       try {
       const urls = await Promise.all(
         bannerPaths.map(async (path) => {
-          const search_title = courses_list.find(item => item.banner_image === path);
+
+          const search_by_path = courses_list.find(item => item.banner_image === path);
+        
           const { url } = await getUrl({
             path,
             options: {
               accessLevel: 'public',
             },
           });
-          return { title: search_title.title, path, url: url.href };
+          return { title: search_by_path.title, path, url: url.href, videos: search_by_path.videos };
         })
       );
       setContentsToShow(urls);
@@ -76,7 +72,8 @@ const CourseList = () => {
     <View style={styles.itemContainer}>
       <TouchableOpacity
            onPress={() => navigation.navigate('ContentCourse',{
-            titlecourse: item.title
+            titlecourse: item.title,
+            videos: item.videos
           })}>
       <FastImage
         source={{

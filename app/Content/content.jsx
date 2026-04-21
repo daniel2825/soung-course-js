@@ -3,25 +3,21 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { getUrl } from '@aws-amplify/storage';
 import VideoItem from '../../components/Video/videoItem'
 import { View,Text, SafeAreaView, Platform, FlatList, StyleSheet, Dimensions } from 'react-native';
-import Video from 'react-native-video';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const ContentCourse = () => {
     const route = useRoute();
     const { titlecourse } = route.params;
+    const { videos } = route.params;
     const [contentsToShow, setContentsToShow] = useState([]);
-    
-
-    const video_list = [
-    {title: 'Tecnica vocal', banner_video: 'videos/tecnica_vocal/jair-santrich.mp4', id_course:"a"},
-    {title: 'Tecnica vocal', banner_video: 'videos/prueba/JairS.mp4', id_course:"a"},
-
-   ];
-
+  
     const [videoUris, setVideoUris] = useState([]);
     
     console.log('Title course:', titlecourse);
+    console.log('Videos:', videos);
+    const video_list = videos;
+
 
      useEffect(() => {
     
@@ -40,13 +36,11 @@ const ContentCourse = () => {
                       accessLevel: 'public'
                     }
                   });
-                  console.log("hello video",url);
                   return {path, url: url.href}
                 })
               );
-          console.log("url ss",urls);
           setContentsToShow(urls);
-          console.log(contentsToShow);
+          console.log("content to show",urls);
         } catch (error) {
           console.error('Error fetching image URLs:', error);
         } finally {
