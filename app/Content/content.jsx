@@ -40,7 +40,6 @@ const ContentCourse = () => {
                 })
               );
           setContentsToShow(urls);
-          console.log("content to show",urls);
         } catch (error) {
           console.error('Error fetching image URLs:', error);
         } finally {

@@ -68,28 +68,28 @@ const Personal = () => {
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} // Basic styling
         onChangeText={text => setEmailInput(text)} // Update state on text change
         value={emailInput} // Bind the input value to the state
-        placeholder="Enter text here..." // Placeholder text
+        placeholder="Introduce email" // Placeholder text
       />
       <TextInput
         label={'Name'}
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} // Basic styling
         onChangeText={text => setnameInput(text)} // Update state on text change
         value={nameInput} // Bind the input value to the state
-        placeholder="Enter text here..." // Placeholder text
+        placeholder="Indroduce nombres" // Placeholder text
       />
       <TextInput
         label={'Last Name'}
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} // Basic styling
         onChangeText={text => setLastNameInput(text)} // Update state on text change
         value={lastNameInput} // Bind the input value to the state
-        placeholder="Enter text here..." // Placeholder text
+        placeholder="Introduce apellidos" // Placeholder text
       />
       <TextInput
         label={'Birthday'}
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} // Basic styling
         onChangeText={text => setBirthDayInput(text)} // Update state on text change
         value={birthDateInput} // Bind the input value to the state
-        placeholder="Enter text here..." // Placeholder text
+        placeholder="Indroduce fecha de nacimiento" // Placeholder text
       />
        <Button
       title="Guardar"

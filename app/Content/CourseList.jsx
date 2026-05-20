@@ -1,7 +1,9 @@
 import {View, Text, Platform,ActivityIndicator, FlatList,StyleSheet ,TouchableOpacity} from 'react-native'
 import FastImage from 'react-native-fast-image';
 import { getUrl } from '@aws-amplify/storage';
+import { useRoute } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
+import Colors from '../../constants/Colors'
 import React, { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
 
@@ -12,11 +14,15 @@ const CourseList = () => {
   const [contentsToShow, setContentsToShow] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bannerPaths, setBannerPaths] = useState([]);
+  const route = useRoute();
+  const { email } = route.params;
+
   const navigation = useNavigation();
 
   const getAllCourses = async () => {
   
   console.log("1. Starting request..."); 
+  console.log("email",email)
   try {
     console.log("Is model defined?", !!client.models.SongCourseContent);
     const response = await client.models.SongCourseContent.list();
@@ -69,7 +75,7 @@ const CourseList = () => {
   };
 
       const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <View style={style.itemContainer}>
       <TouchableOpacity
            onPress={() => navigation.navigate('ContentCourse',{
             titlecourse: item.title,
@@ -80,10 +86,13 @@ const CourseList = () => {
           uri: item.url,
           priority: FastImage.priority.normal,
         }}
-        style={styles.image}
+        style={style.image}
         resizeMode={FastImage.resizeMode.cover}
       />
-      <Text style={styles.text}>{item.title}</Text>
+      <Text style={style.text}>{item.title}</Text>
+      <TouchableOpacity style={style.button}>
+              <Text style={style.buttonText}>Inscribirme</Text>
+           </TouchableOpacity>
       </TouchableOpacity>
     </View>
   );
@@ -106,7 +115,7 @@ const CourseList = () => {
                 data={contentsToShow}
                 keyExtractor={(item) => item.path}
                 renderItem={renderItem}
-                contentContainerStyle={styles.listContent}
+                contentContainerStyle={style.listContent}
                 initialNumToRender={3}
                 maxToRenderPerBatch={5}
                 windowSize={7}
@@ -116,7 +125,7 @@ const CourseList = () => {
     )
 }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -139,6 +148,20 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
   },
+  button:{
+    padding: 15,
+    backgroundColor: Colors.WHITE,
+    marginTop: 20,
+    borderRadius: 30,
+    borderWidth: 12,
+    borderColor: Colors.WHITE
+
+  },
+  buttonText:{
+    textAlign: 'center',
+    fontSize: 18,
+    color: Colors.BLACK
+  }
 });
 
 
