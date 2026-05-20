@@ -3,14 +3,9 @@ import React from 'react'
 import { Tabs } from 'expo-router'
 import { useRoute } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { RetryMode } from 'aws-cdk-lib/aws-codepipeline';
-
-const TabLayout = () => {
-
+export default function TabLayout(){
 
     console.log("init");
-
-
 
     return (
         <Tabs screenOptions={{
@@ -41,8 +36,4 @@ const TabLayout = () => {
             */}
         </Tabs>
     )
-
-
 }
-
-export default TabLayout;
