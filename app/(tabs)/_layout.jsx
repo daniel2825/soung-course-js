@@ -3,9 +3,16 @@ import React from 'react'
 import { Tabs } from 'expo-router'
 import { useRoute } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from 'expo-router';
+
 export default function TabLayout(){
 
-    console.log("init");
+    const route = useRoute();
+    const { email } = route.params;
+
+    const dataToSend = {
+      email: email
+    }
 
     return (
         <Tabs screenOptions={{
@@ -18,6 +25,7 @@ export default function TabLayout(){
             }}
             />
             <Tabs.Screen name='explore'
+            initialParams={dataToSend}
             options={{
                 tabBarIcon:({color,size})=><Ionicons name="airplane" size={size} color={color} />,
                 tabBarLabel: "Cursos" 

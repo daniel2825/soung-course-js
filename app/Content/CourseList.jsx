@@ -1,4 +1,4 @@
-import {View, Text, Platform,ActivityIndicator, FlatList,StyleSheet ,TouchableOpacity} from 'react-native'
+import { View, Text, Platform, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image';
 import { getUrl } from '@aws-amplify/storage';
 import { useRoute } from '@react-navigation/native';
@@ -6,12 +6,23 @@ import { useNavigation } from 'expo-router';
 import Colors from '../../constants/Colors'
 import React, { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
+import { gql,useMutation } from '@apollo/client';
 
 const client = generateClient();
+
+const PERSON_MUTATION = gql`
+mutation SubscribePersonToCourse($person: PersonInput!) {
+  subscribePersonToCourse(
+    person: $person
+  ) {
+    name
+  }
+}`;
 
 const CourseList = () => {
 
   const [contentsToShow, setContentsToShow] = useState([]);
+  const [subscribePersonToCourse, { error, data }] = useMutation(PERSON_MUTATION);
   const [loading, setLoading] = useState(true);
   const [bannerPaths, setBannerPaths] = useState([]);
   const route = useRoute();
@@ -20,43 +31,64 @@ const CourseList = () => {
   const navigation = useNavigation();
 
   const getAllCourses = async () => {
-  
-  console.log("1. Starting request..."); 
-  console.log("email",email)
-  try {
-    console.log("Is model defined?", !!client.models.SongCourseContent);
-    const response = await client.models.SongCourseContent.list();
-   
-    console.log("2. Response received:", response.data);
-    
-    const { data, errors } = response;
-    if (errors) console.error("3. Errors found:", errors);
-    return data;
-  } catch (err) {
-    console.error("4. Catch block triggered:", err);
-  }
 
-};
+    console.log("1. Starting request...");
+    console.log("email to send java", email)
+    try {
+      console.log("Is model defined?", !!client.models.SongCourseContent);
+      const response = await client.models.SongCourseContent.list();
 
-    useEffect(() => {
-      syncAllCourses();
-      }, []);
+      console.log("2. Response received:", response.data);
 
-    const syncAllCourses = async () => {
-      const courses_list = await getAllCourses();
-      console.log("all courses await", courses_list);
-      getFileUrl(courses_list);
+      const { data, errors } = response;
+      if (errors) console.error("3. Errors found:", errors);
+      return data;
+    } catch (err) {
+      console.error("4. Catch block triggered:", err);
     }
 
-    const getFileUrl = async (courses_list) => {
+  };
 
-      courses_list.map(item => {setBannerPaths(bannerPaths.push(item.banner_image))});
-      try {
+  useEffect(() => {
+    syncAllCourses();
+  }, []);
+
+  const syncAllCourses = async () => {
+    const courses_list = await getAllCourses();
+    console.log("all courses await", courses_list);
+    getFileUrl(courses_list);
+  }
+    const subscribeCourse = async() => {
+    console.log("you are suscribed");
+
+    try{
+      const { data } = await 
+      subscribePersonToCourse({
+              variables: {
+                person:{
+                  email: email
+                }     
+              },
+            });
+      console.log("data", data);
+  }
+
+    catch(err){
+      console.log("un expected error", err);
+    }
+
+  }
+
+
+  const getFileUrl = async (courses_list) => {
+
+    courses_list.map(item => { setBannerPaths(bannerPaths.push(item.banner_image)) });
+    try {
       const urls = await Promise.all(
         bannerPaths.map(async (path) => {
 
           const search_by_path = courses_list.find(item => item.banner_image === path);
-        
+
           const { url } = await getUrl({
             path,
             options: {
@@ -74,25 +106,26 @@ const CourseList = () => {
     }
   };
 
-      const renderItem = ({ item }) => (
+  const renderItem = ({ item }) => (
     <View style={style.itemContainer}>
       <TouchableOpacity
-           onPress={() => navigation.navigate('ContentCourse',{
-            titlecourse: item.title,
-            videos: item.videos
-          })}>
-      <FastImage
-        source={{
-          uri: item.url,
-          priority: FastImage.priority.normal,
-        }}
-        style={style.image}
-        resizeMode={FastImage.resizeMode.cover}
-      />
-      <Text style={style.text}>{item.title}</Text>
-      <TouchableOpacity style={style.button}>
-              <Text style={style.buttonText}>Inscribirme</Text>
-           </TouchableOpacity>
+        onPress={() => navigation.navigate('ContentCourse', {
+          titlecourse: item.title,
+          videos: item.videos
+        })}>
+        <FastImage
+          source={{
+            uri: item.url,
+            priority: FastImage.priority.normal,
+          }}
+          style={style.image}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+        <Text style={style.text}>{item.title}</Text>
+        <TouchableOpacity style={style.button}
+        onPress={subscribeCourse}>
+          <Text style={style.buttonText}>Inscribirme</Text>
+        </TouchableOpacity>
       </TouchableOpacity>
     </View>
   );
@@ -102,27 +135,27 @@ const CourseList = () => {
 
 
 
-    return (
-        <View style={{
-            padding: 10
-        }}>
-            <Text style={{
-                fontFamily: 'output-bold',
-                fontSize: 25
-            }}>Exlora todos los cursos</Text>
-       
-             <FlatList
-                data={contentsToShow}
-                keyExtractor={(item) => item.path}
-                renderItem={renderItem}
-                contentContainerStyle={style.listContent}
-                initialNumToRender={3}
-                maxToRenderPerBatch={5}
-                windowSize={7}
-                removeClippedSubviews={true}
-              />
-        </View>
-    )
+  return (
+    <View style={{
+      padding: 10
+    }}>
+      <Text style={{
+        fontFamily: 'output-bold',
+        fontSize: 25
+      }}>Exlora todos los cursos</Text>
+
+      <FlatList
+        data={contentsToShow}
+        keyExtractor={(item) => item.path}
+        renderItem={renderItem}
+        contentContainerStyle={style.listContent}
+        initialNumToRender={3}
+        maxToRenderPerBatch={5}
+        windowSize={7}
+        removeClippedSubviews={true}
+      />
+    </View>
+  )
 }
 
 const style = StyleSheet.create({
@@ -148,7 +181,7 @@ const style = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
   },
-  button:{
+  button: {
     padding: 15,
     backgroundColor: Colors.WHITE,
     marginTop: 20,
@@ -157,7 +190,7 @@ const style = StyleSheet.create({
     borderColor: Colors.WHITE
 
   },
-  buttonText:{
+  buttonText: {
     textAlign: 'center',
     fontSize: 18,
     color: Colors.BLACK
