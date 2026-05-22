@@ -11,9 +11,10 @@ import { gql,useMutation } from '@apollo/client';
 const client = generateClient();
 
 const PERSON_MUTATION = gql`
-mutation SubscribePersonToCourse($person: PersonInput!) {
+mutation SubscribePersonToCourse($person: PersonInput!,$course: CourseInput!) {
   subscribePersonToCourse(
-    person: $person
+    person: $person,
+    course: $course
   ) {
     name
   }
@@ -58,8 +59,9 @@ const CourseList = () => {
     console.log("all courses await", courses_list);
     getFileUrl(courses_list);
   }
-    const subscribeCourse = async() => {
-    console.log("you are suscribed");
+
+    const subscribeCourse = async(title,idCourse) => {
+    console.log("you are suscribed", title, "id", idCourse);
 
     try{
       const { data } = await 
@@ -67,10 +69,13 @@ const CourseList = () => {
               variables: {
                 person:{
                   email: email
+                },
+                course:{
+                  idCourse: idCourse,
+                  title: title
                 }     
               },
             });
-      console.log("data", data);
   }
 
     catch(err){
@@ -95,7 +100,8 @@ const CourseList = () => {
               accessLevel: 'public',
             },
           });
-          return { title: search_by_path.title, path, url: url.href, videos: search_by_path.videos };
+          console.log("test idcourse", search_by_path.id)
+          return { id: search_by_path.id, title: search_by_path.title, path, url: url.href, videos: search_by_path.videos };
         })
       );
       setContentsToShow(urls);
@@ -122,8 +128,9 @@ const CourseList = () => {
           resizeMode={FastImage.resizeMode.cover}
         />
         <Text style={style.text}>{item.title}</Text>
+
         <TouchableOpacity style={style.button}
-        onPress={subscribeCourse}>
+        onPress={() => subscribeCourse(item.title,item.id)}>
           <Text style={style.buttonText}>Inscribirme</Text>
         </TouchableOpacity>
       </TouchableOpacity>
