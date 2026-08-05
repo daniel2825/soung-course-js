@@ -2,30 +2,73 @@ import {View, Text, Platform,ActivityIndicator, FlatList,StyleSheet ,TouchableOp
 import { Image } from 'expo-image';
 import { getUrl } from '@aws-amplify/storage';
 import { useNavigation } from 'expo-router';
+import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
+import { gql, useLazyQuery } from '@apollo/client';
 const client = generateClient();
+
+const COURSES_BY_PERSON_QUERY = gql`
+   query GetCourseSubscribePerson($email: String!) {
+    getCourseSubscribePerson(email: $email) {
+      title,
+      idCourse
+    }
+  }`;
+
 
 const ProgressCourseList = () => {
 
     const [contentsToShow, setContentsToShow] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading_screen, setLoading] = useState(true);
     const [bannerPaths, setBannerPaths] = useState([]);
+    const [getCoursesByPerson,{loading, error, data}] = useLazyQuery(COURSES_BY_PERSON_QUERY);
+    const route = useRoute();
+    const { email } = route.params;
+
+    
 
   const navigation = useNavigation();
 
-  const getAllCourses = async () => {
+  const seachCoursesRegisteredByPerson = async() => {
+    
+    try{
+
+      const { data } = await 
+      getCoursesByPerson({
+        variables: {
+          email: email
+        }
+      }
+    );
+
+    return data;
+
+    }catch(err){
+      console.log("un expected error", err);
+    }
+
+  }
+
+  const getAllCourses = async (courses_list_registered_person) => {
   
     console.log("1. Starting request..."); 
+    const dataReturn = [];
     try {
       console.log("Is model defined?", !!client.models.SongCourseContent);
       const response = await client.models.SongCourseContent.list();
-     
+
       console.log("2. Response received:", response.data);
       
       const { data, errors } = response;
+      console.log("2. Response data:", data);
       if (errors) console.error("3. Errors found:", errors);
-      return data;
+
+      const dataReturn = courses_list_registered_person.getCourseSubscribePerson
+                        .map(item => data.find(itemData => itemData.id === item.idCourse))
+                        .filter(Boolean);
+
+      return dataReturn;
     } catch (err) {
       console.error("4. Catch block triggered:", err);
     }
@@ -38,7 +81,9 @@ const ProgressCourseList = () => {
 
 
     const syncAllCourses = async () => {
-      const courses_list = await getAllCourses();
+      const courses_list_registered_person = await seachCoursesRegisteredByPerson();
+      console.log("test sync",courses_list_registered_person);
+      const courses_list = await getAllCourses(courses_list_registered_person);
       console.log("all courses await", courses_list);
       getFileUrl(courses_list);
     }
@@ -88,7 +133,7 @@ const ProgressCourseList = () => {
   );
 
 
-  if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+  if (loading_screen) return <ActivityIndicator size="large" color="#0000ff" />;
 
 
 

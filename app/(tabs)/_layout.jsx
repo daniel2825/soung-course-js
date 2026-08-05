@@ -18,7 +18,8 @@ export default function TabLayout(){
         <Tabs screenOptions={{
             headerShown:false 
         }} >
-            <Tabs.Screen name='home' 
+            <Tabs.Screen name='home'
+            initialParams={dataToSend}
             options={{
                 tabBarIcon:({color,size})=><Ionicons name="home-sharp" size={size} color={color} />,
                 tabBarLabel: "Menu" 
@@ -31,6 +32,7 @@ export default function TabLayout(){
                 tabBarLabel: "Cursos" 
             }} />
             <Tabs.Screen name='progress'
+            initialParams={dataToSend}
             options={{
                 tabBarIcon:({color,size})=><Ionicons name="bar-chart" size={size} color={color} />,
                 tabBarLabel: "Mi progreso" 
