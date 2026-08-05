@@ -10,6 +10,7 @@ const ContentCourse = () => {
     const route = useRoute();
     const { titlecourse } = route.params;
     const { videos } = route.params;
+    const [loading, setLoading] = useState(true);
     const [contentsToShow, setContentsToShow] = useState([]);
   
     const [videoUris, setVideoUris] = useState([]);

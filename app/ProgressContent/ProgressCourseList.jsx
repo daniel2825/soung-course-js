@@ -1,5 +1,5 @@
 import {View, Text, Platform,ActivityIndicator, FlatList,StyleSheet ,TouchableOpacity} from 'react-native'
-import FastImage from 'react-native-fast-image';
+import { Image } from 'expo-image';
 import { getUrl } from '@aws-amplify/storage';
 import { useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -76,13 +76,11 @@ const ProgressCourseList = () => {
             titlecourse: item.title,
             videos: item.videos
           })}>
-      <FastImage
-        source={{
-          uri: item.url,
-          priority: FastImage.priority.normal,
-        }}
+      <Image
+        source={{ uri: item.url }}
         style={styles.image}
-        resizeMode={FastImage.resizeMode.cover}
+        contentFit="cover"
+        transition={200}
       />
       <Text style={styles.text}>{item.title}</Text>
       </TouchableOpacity>
