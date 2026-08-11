@@ -8,6 +8,9 @@ import React, { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
 import { gql,useMutation } from '@apollo/client';
 
+// https://github.com/techoptio/react-native-live-pitch-detection
+// https://github.com/rnheroes/react-native-pitchy
+
 const client = generateClient();
 
 const PERSON_MUTATION = gql`
@@ -114,11 +117,6 @@ const CourseList = () => {
 
   const renderItem = ({ item }) => (
     <View style={style.itemContainer}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('ContentCourse', {
-          titlecourse: item.title,
-          videos: item.videos
-        })}>
         <Image
           source={{ uri: item.url }}
           style={style.image}
@@ -131,7 +129,6 @@ const CourseList = () => {
         onPress={() => subscribeCourse(item.title,item.id)}>
           <Text style={style.buttonText}>Inscribirme</Text>
         </TouchableOpacity>
-      </TouchableOpacity>
     </View>
   );
 

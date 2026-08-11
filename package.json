@@ -25,6 +25,7 @@
     "@react-native-community/netinfo": "^11.4.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "@techoptio/react-native-live-pitch-detection": "^2.0.0",
     "aws-amplify": "^6.15.7",
     "expo": "~54.0.0",
     "expo-blur": "~15.0.8",
