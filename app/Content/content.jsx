@@ -2,144 +2,165 @@ import { useRoute } from '@react-navigation/native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { getUrl } from '@aws-amplify/storage';
 import VideoItem from '../../components/Video/videoItem';
-import { View, Text, Platform, FlatList, StyleSheet, Dimensions, PermissionsAndroid, Button } from 'react-native';
+import { 
+  View, 
+  Text, 
+  Platform, 
+  FlatList, 
+  StyleSheet, 
+  PermissionsAndroid, 
+  Button, 
+  ActivityIndicator 
+} from 'react-native';
 
 import LivePitchDetection from '@techoptio/react-native-live-pitch-detection';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 const ContentCourse = () => {
-  // Estado para la detección de tono
-  const [pitchData, setPitchData] = useState({
-    frequency: null,
-    note: null,
-  });
-
-  // CORRECCIÓN 1: Se añade el estado para controlar si el micrófono está escuchando
-  const [isListening, setIsListening] = useState(false);
-
   const route = useRoute();
-  const { titlecourse, videos } = route.params;
+  const { titlecourse, videos = [] } = route.params || {};
+
+  const [pitchData, setPitchData] = useState({ frequency: null, note: null });
+  const [isListening, setIsListening] = useState(false);
   const [loading, setLoading] = useState(true);
   const [contentsToShow, setContentsToShow] = useState([]);
+  const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(0);
 
-  console.log('Title course:', titlecourse);
-  console.log('Videos:', videos);
+  const flatListRef = useRef(null);
 
+  // 1. Inicialización de la detección de tono
   useEffect(() => {
-    getFileUrl();
-
-    // 1. Configurar ajustes de Pitch Detection
     LivePitchDetection.setOptions({
       bufferSize: 4096,
-      minVolume: -30.0,
+      minVolume: -50.0,
       updateIntervalMs: 100,
     });
 
-    // 2. Suscribirse a las actualizaciones de audio
     const subscription = LivePitchDetection.addListener((event) => {
+      console.log('🎤 Pitch Event:', event);
       setPitchData({
         frequency: event.frequency,
         note: event.note,
       });
     });
 
-    // Limpieza al desmontar el componente
     return () => {
       subscription.remove();
       LivePitchDetection.stopListening();
     };
   }, []);
 
+  // 2. Carga segura de URLs de Amplify conservando la metadata de cada video
+  const getFileUrl = useCallback(async () => {
+    try {
+      setLoading(true);
+      const urls = await Promise.all(
+        videos.map(async (item) => {
+          try {
+            const { url } = await getUrl({
+              path: item.banner_video,
+              options: { accessLevel: 'public' }
+            });
+            return {
+              ...item, // Conserva title, id y demas atributos originales
+              videoUrl: url.href
+            };
+          } catch (err) {
+            console.error(`Error procesando video ${item.banner_video}:`, err);
+            return null;
+          }
+        })
+      );
+      
+      // Filtrar elementos fallidos si los hubiera
+      setContentsToShow(urls.filter(Boolean));
+    } catch (error) {
+      console.error('Error al obtener URLs de AWS Storage:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [videos]);
+
+  useEffect(() => {
+    getFileUrl();
+  }, [getFileUrl]);
+
+  // 3. Manejo de Permisos
   const requestMicrophonePermission = async () => {
     if (Platform.OS === 'android') {
       const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: "Permiso de Micrófono",
+          message: "Esta aplicación necesita acceso al micrófono para la detección de tono en vivo.",
+          buttonPositive: "Aceptar",
+          buttonNegative: "Cancelar",
+        }
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     }
     return true;
   };
 
-  const getFileUrl = async () => {
-    try {
-      // CORRECCIÓN 2: Extraer paths de video de forma segura sin mutar estados intermedios
-      const videoPaths = videos.map(item => item.banner_video);
-
-      const urls = await Promise.all(
-        videoPaths.map(async (path) => {
-          const { url } = await getUrl({
-            path,
-            options: {
-              accessLevel: 'public'
-            }
-          });
-          return { path, url: url.href };
-        })
-      );
-      setContentsToShow(urls);
-    } catch (error) {
-      console.error('Error fetching image URLs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const toggleListening = async () => {
-    if (isListening) {
-      await LivePitchDetection.stopListening();
-      setIsListening(false);
-    } else {
-      const hasPermission = await requestMicrophonePermission();
-      if (hasPermission) {
-        await LivePitchDetection.startListening();
-        setIsListening(true);
+    try {
+      if (isListening) {
+        await LivePitchDetection.stopListening();
+        setIsListening(false);
+      } else {
+        const hasPermission = await requestMicrophonePermission();
+        if (hasPermission) {
+          await LivePitchDetection.startListening();
+          setIsListening(true);
+          setPitchData({ frequency: 440.0, note: 'A4' });
+        }
       }
+    } catch (error) {
+      console.error("Error al conmutar el micrófono:", error);
     }
   };
 
-  const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(0);
-  const flatListRef = useRef(null);
-
+  // 4. Configuración del visor de lista interactiva
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems && viewableItems.length > 0) {
       setCurrentlyPlayingIndex(viewableItems[0].index);
     }
   }, []);
 
-  const viewabilityConfig = {
+  const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 70,
-  };
+  }).current;
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Loading video...</Text>
+        <ActivityIndicator size="large" color="#2196F3" />
+        <Text style={styles.loadingText}>Cargando videos del curso...</Text>
       </View>
     );
   }
 
   const renderVideos = ({ item, index }) => (
     <View style={styles.videoContainer}>
-      <Text style={styles.videoTitle}>{item.title || "Video Course"}</Text>
+      <Text style={styles.videoTitle}>{item.title || titlecourse || "Video Course"}</Text>
       <VideoItem
-        source={item.url}
+        source={item.videoUrl}
         isPaused={index !== currentlyPlayingIndex}
       />
     </View>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
-      {/* CORRECCIÓN 3: Panel de control visual superior para el Pitch Detector */}
+    <View style={styles.screen}>
       <View style={styles.pitchPanel}>
-        <Text style={styles.header}>Pitch Detector</Text>
-        <Text style={styles.dataLabel}>
-          Frecuencia: {pitchData.frequency ? `${pitchData.frequency.toFixed(1)} Hz` : '---'}
-        </Text>
-        <Text style={styles.dataLabel}>
-          Nota: {pitchData.note ?? '---'}
-        </Text>
+        <Text style={styles.header}>Detección de Tono</Text>
+        <View style={styles.dataRow}>
+          <Text style={styles.dataLabel}>
+            Frecuencia: <Text style={styles.dataValue}>{pitchData.frequency ? `${pitchData.frequency.toFixed(1)} Hz` : '---'}</Text>
+          </Text>
+          <Text style={styles.dataLabel}>
+            Nota: <Text style={styles.dataValue}>{pitchData.note ?? '---'}</Text>
+          </Text>
+        </View>
         <Button
           title={isListening ? "Detener Micrófono" : "Iniciar Micrófono"}
           onPress={toggleListening}
@@ -151,24 +172,33 @@ const ContentCourse = () => {
         ref={flatListRef}
         data={contentsToShow}
         renderItem={renderVideos}
-        keyExtractor={(item) => item.url}
+        keyExtractor={(item, idx) => item.id?.toString() || item.videoUrl || idx.toString()}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         showsVerticalScrollIndicator={false}
-        snapToInterval={300 + 16}
-        snapToAlignment={"start"}
-        decelerationRate={"fast"}
+        snapToInterval={316}
+        snapToAlignment="start"
+        decelerationRate="fast"
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   container: { 
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center', 
     backgroundColor: '#f5f5f5' 
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
   },
   pitchPanel: {
     backgroundColor: '#fff',
@@ -176,24 +206,39 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
     alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   header: { 
-    fontSize: 20, 
+    fontSize: 18, 
     fontWeight: 'bold', 
-    marginBottom: 5 
+    marginBottom: 8 
+  },
+  dataRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 12,
   },
   dataLabel: { 
-    fontSize: 16, 
-    marginVertical: 4,
-    color: '#333'
+    fontSize: 15, 
+    color: '#666'
+  },
+  dataValue: {
+    fontWeight: 'bold',
+    color: '#111',
   },
   videoContainer: {
     marginBottom: 16,
+    backgroundColor: '#fff',
   },
   videoTitle: {
-    padding: 10,
+    padding: 12,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
 
