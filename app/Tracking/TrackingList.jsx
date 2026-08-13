@@ -21,7 +21,6 @@ const TrackingList = () => {
 
     const [contentsToShow, setContentsToShow] = useState([]);
     const [loading_screen, setLoading] = useState(true);
-    const [bannerPaths, setBannerPaths] = useState([]);
     const [getCoursesByPerson,{loading, error, data}] = useLazyQuery(COURSES_BY_PERSON_QUERY);
     const route = useRoute();
     const { email } = route.params;
@@ -30,50 +29,23 @@ const TrackingList = () => {
 
   const navigation = useNavigation();
 
-  const seachCoursesRegisteredByPerson = async() => {
-    
-    try{
-
-      const { data } = await 
-      getCoursesByPerson({
-        variables: {
-          email: email
-        }
+const seachCoursesRegisteredByPerson = async () => {
+  try {
+    const { data } = await getCoursesByPerson({
+      variables: {
+        email: email
       }
-    );
+    });
 
-    return data;
+    console.log("Respuesta completa:", data);
 
-    }catch(err){
-      console.log("un expected error", err);
-    }
+    return data?.getCourseSubscribePerson ?? [];
 
+  } catch (err) {
+    console.log("unexpected error", err);
+    return [];
   }
-
-  const getAllCourses = async (courses_list_registered_person) => {
-  
-    console.log("1. Starting request..."); 
-    const dataReturn = [];
-    try {
-      console.log("Is model defined?", !!client.models.SongCourseContent);
-      const response = await client.models.SongCourseContent.list();
-
-      console.log("2. Response received:", response.data);
-      
-      const { data, errors } = response;
-      console.log("2. Response data:", data);
-      if (errors) console.error("3. Errors found:", errors);
-
-      const dataReturn = courses_list_registered_person.getCourseSubscribePerson
-                        .map(item => data.find(itemData => itemData.id === item.idCourse))
-                        .filter(Boolean);
-
-      return dataReturn;
-    } catch (err) {
-      console.error("4. Catch block triggered:", err);
-    }
-  
-  };
+};
 
     useEffect(() => {
         syncAllCourses();
@@ -81,52 +53,24 @@ const TrackingList = () => {
 
 
     const syncAllCourses = async () => {
+      try{
       const courses_list_registered_person = await seachCoursesRegisteredByPerson();
-      console.log("test sync",courses_list_registered_person);
-      const courses_list = await getAllCourses(courses_list_registered_person);
-      console.log("all courses await", courses_list);
-      getFileUrl(courses_list);
+      setContentsToShow(courses_list_registered_person);
+      }
+      catch(error){
+      console.error('Error in getting information about progress course by person:', error);
+      }
+      finally{
+        setLoading(false);
+      }
     }
-
-    const getFileUrl = async (courses_list) => {
-
-      courses_list.map(item => {setBannerPaths(bannerPaths.push(item.banner_image))});
-      try {
-      const urls = await Promise.all(
-        bannerPaths.map(async (path) => {
-
-          const search_by_path = courses_list.find(item => item.banner_image === path);
-        
-          const { url } = await getUrl({
-            path,
-            options: {
-              accessLevel: 'public',
-            },
-          });
-          return { title: search_by_path.title, path, url: url.href, videos: search_by_path.videos };
-        })
-      );
-      setContentsToShow(urls);
-    } catch (error) {
-      console.error('Error fetching image URLs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
       const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <TouchableOpacity
            onPress={() => navigation.navigate('ProgressContentCourse',{
-            titlecourse: item.title,
-            videos: item.videos
+            titlecourse: item.title
           })}>
-      <Image
-        source={{ uri: item.url }}
-        style={styles.image}
-        contentFit="cover"
-        transition={200}
-      />
       <Text style={styles.text}>{item.title}</Text>
       </TouchableOpacity>
     </View>
@@ -144,11 +88,11 @@ const TrackingList = () => {
             <Text style={{
                 fontFamily: 'output-bold',
                 fontSize: 25
-            }}>Tus cursos</Text>
+            }}>Tu progreso</Text>
        
              <FlatList
                 data={contentsToShow}
-                keyExtractor={(item) => item.path}
+                keyExtractor={(item) => item.idCourse}
                 renderItem={renderItem}
                 contentContainerStyle={styles.listContent}
                 initialNumToRender={3}
@@ -180,7 +124,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 8,
-    color: '#ffffff',
+    color: '#000000ff',
     fontSize: 16,
   },
 });

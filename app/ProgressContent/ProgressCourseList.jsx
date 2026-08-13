@@ -93,6 +93,7 @@ const ProgressCourseList = () => {
       courses_list.map(item => {setBannerPaths(bannerPaths.push(item.banner_image))});
       try {
       const urls = await Promise.all(
+        
         bannerPaths.map(async (path) => {
 
           const search_by_path = courses_list.find(item => item.banner_image === path);
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 8,
-    color: '#ffffff',
+    color: '#000000ff',
     fontSize: 16,
   },
 });
