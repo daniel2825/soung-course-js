@@ -29,6 +29,7 @@ const ContentCourse = () => {
 
   // 1. Inicialización de la detección de tono
   useEffect(() => {
+    getFileUrl();
     LivePitchDetection.setOptions({
       bufferSize: 4096,
       minVolume: -50.0,
@@ -80,10 +81,6 @@ const ContentCourse = () => {
     }
   }, [videos]);
 
-  useEffect(() => {
-    getFileUrl();
-  }, [getFileUrl]);
-
   // 3. Manejo de Permisos
   const requestMicrophonePermission = async () => {
     if (Platform.OS === 'android') {
@@ -111,7 +108,6 @@ const ContentCourse = () => {
         if (hasPermission) {
           await LivePitchDetection.startListening();
           setIsListening(true);
-          setPitchData({ frequency: 440.0, note: 'A4' });
         }
       }
     } catch (error) {
