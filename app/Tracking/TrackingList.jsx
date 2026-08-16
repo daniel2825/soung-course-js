@@ -8,13 +8,20 @@ import { generateClient } from 'aws-amplify/data';
 import { gql, useLazyQuery } from '@apollo/client';
 const client = generateClient();
 
+
 const COURSES_BY_PERSON_QUERY = gql`
-   query GetCourseSubscribePerson($email: String!) {
-    getCourseSubscribePerson(email: $email) {
-      title,
-      idCourse
+  query GetPerson($email: String!) {
+   getPerson(email: $email) {
+    id,
+    course {
+      idCourse,
+      title
+      progress {
+        completed
+      }
     }
-  }`;
+  }
+}`;
 
 
 const TrackingList = () => {
@@ -37,9 +44,10 @@ const seachCoursesRegisteredByPerson = async () => {
       }
     });
 
-    console.log("Respuesta completa:", data);
+    console.log("Respuesta completa:", data.getPerson);
+    //console.log("Respuesta completa:", JSON.stringify(data, null, 2));
 
-    return data?.getCourseSubscribePerson ?? [];
+    return data?.getPerson.course ?? [];
 
   } catch (err) {
     console.log("unexpected error", err);
@@ -72,6 +80,8 @@ const seachCoursesRegisteredByPerson = async () => {
             titlecourse: item.title
           })}>
       <Text style={styles.text}>{item.title}</Text>
+      <Text style={styles.text}>{item.progress.completed} %</Text>
+
       </TouchableOpacity>
     </View>
   );

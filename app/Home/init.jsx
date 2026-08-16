@@ -8,6 +8,7 @@ import { gql, useLazyQuery } from '@apollo/client';
 const PERSON_QUERY = gql`
    query GetPerson($email: String!) {
     getPerson(email: $email) {
+      id,
       email
     }
   }`;
