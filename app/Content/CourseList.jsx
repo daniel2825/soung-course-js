@@ -104,7 +104,7 @@ const CourseList = () => {
             },
           });
           console.log("test idcourse", search_by_path.id)
-          return { id: search_by_path.id, title: search_by_path.title, path, url: url.href, videos: search_by_path.videos };
+          return { id: search_by_path.id, title: search_by_path.title, path, url: url.href, modules: search_by_path.modules };
         })
       );
       setContentsToShow(urls);

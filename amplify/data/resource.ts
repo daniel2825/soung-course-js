@@ -2,7 +2,7 @@ import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 
 const schema = a.schema({
 
-  Videos: a.customType({
+  Modules: a.customType({
         module_number: a.string(),
         module_title: a.string(),
         content: a.string(),
@@ -13,7 +13,7 @@ const schema = a.schema({
       content: a.string(),
       title: a.string(),
       banner_image: a.string(),
-      videos: a.ref('Videos').array()
+      modules: a.ref('Modules').array()
       
     })
     .authorization((allow) => [allow.authenticated()]),
