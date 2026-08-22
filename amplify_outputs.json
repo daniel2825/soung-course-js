@@ -28,15 +28,15 @@
   "data": {
     "url": "https://mjko6yzvbjagxkzjkpy5ljkfqa.appsync-api.us-west-1.amazonaws.com/graphql",
     "aws_region": "us-west-1",
-    "default_authorization_type": "AWS_IAM",
+    "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
     "authorization_types": [
-      "AMAZON_COGNITO_USER_POOLS"
+      "AWS_IAM"
     ],
     "model_introspection": {
       "version": 1,
       "models": {
-        "Todo": {
-          "name": "Todo",
+        "SongCourseContent": {
+          "name": "SongCourseContent",
           "fields": {
             "id": {
               "name": "id",
@@ -51,6 +51,30 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "title": {
+              "name": "title",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "banner_image": {
+              "name": "banner_image",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "modules": {
+              "name": "modules",
+              "isArray": true,
+              "type": {
+                "nonModel": "Modules"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
             },
             "createdAt": {
               "name": "createdAt",
@@ -70,7 +94,7 @@
             }
           },
           "syncable": true,
-          "pluralName": "Todos",
+          "pluralName": "SongCourseContents",
           "attributes": [
             {
               "type": "model",
@@ -81,8 +105,7 @@
               "properties": {
                 "rules": [
                   {
-                    "allow": "public",
-                    "provider": "iam",
+                    "allow": "private",
                     "operations": [
                       "create",
                       "update",
@@ -102,7 +125,41 @@
         }
       },
       "enums": {},
-      "nonModels": {}
+      "nonModels": {
+        "Modules": {
+          "name": "Modules",
+          "fields": {
+            "module_number": {
+              "name": "module_number",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "module_title": {
+              "name": "module_title",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "content": {
+              "name": "content",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "banner_video": {
+              "name": "banner_video",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            }
+          }
+        }
+      }
     }
   },
   "storage": {
