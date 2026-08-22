@@ -14,10 +14,11 @@ import { gql,useMutation } from '@apollo/client';
 const client = generateClient();
 
 const PERSON_MUTATION = gql`
-mutation SubscribePersonToCourse($person: PersonInput!,$course: CourseInput!) {
+mutation SubscribePersonToCourse($person: PersonInput!,$course: CourseInput!, $modules: [ModulesInput]) {
   subscribePersonToCourse(
     person: $person,
     course: $course
+    modules: $modules
   ) {
     name
   }
@@ -63,8 +64,13 @@ const CourseList = () => {
     getFileUrl(courses_list);
   }
 
-    const subscribeCourse = async(title,idCourse) => {
+    const subscribeCourse = async(title,idCourse,modules) => {
     console.log("you are suscribed", title, "id", idCourse);
+    console.log("modules",modules);
+
+    const modulesToSent = modules.map((moduleItem) => {
+      return {module_number: moduleItem.module_number, module_title: moduleItem.module_title};
+    } );
 
     try{
       const { data } = await 
@@ -75,8 +81,9 @@ const CourseList = () => {
                 },
                 course:{
                   idCourse: idCourse,
-                  title: title
-                }     
+                  title: title,
+                },
+                modules: modulesToSent
               },
             });
   }
@@ -126,7 +133,7 @@ const CourseList = () => {
         <Text style={style.text}>{item.title}</Text>
 
         <TouchableOpacity style={style.button}
-        onPress={() => subscribeCourse(item.title,item.id)}>
+        onPress={() => subscribeCourse(item.title,item.id,item.modules)}>
           <Text style={style.buttonText}>Inscribirme</Text>
         </TouchableOpacity>
     </View>

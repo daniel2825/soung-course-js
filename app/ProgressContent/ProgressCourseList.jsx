@@ -104,7 +104,7 @@ const ProgressCourseList = () => {
               accessLevel: 'public',
             },
           });
-          return { title: search_by_path.title, path, url: url.href, videos: search_by_path.videos };
+          return { title: search_by_path.title, path, url: url.href, modules: search_by_path.modules };
         })
       );
       setContentsToShow(urls);
@@ -120,7 +120,7 @@ const ProgressCourseList = () => {
       <TouchableOpacity
            onPress={() => navigation.navigate('ProgressContentCourse',{
             titlecourse: item.title,
-            videos: item.videos
+            modules: item.modules
           })}>
       <Image
         source={{ uri: item.url }}

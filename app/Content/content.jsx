@@ -17,7 +17,7 @@ import LivePitchDetection from '@techoptio/react-native-live-pitch-detection';
 
 const ContentCourse = () => {
   const route = useRoute();
-  const { titlecourse, videos = [] } = route.params || {};
+  const { titlecourse, modules = [] } = route.params || {};
 
   const [pitchData, setPitchData] = useState({ frequency: null, note: null });
   const [isListening, setIsListening] = useState(false);
@@ -55,7 +55,7 @@ const ContentCourse = () => {
     try {
       setLoading(true);
       const urls = await Promise.all(
-        videos.map(async (item) => {
+        modules.map(async (item) => {
           try {
             const { url } = await getUrl({
               path: item.banner_video,
@@ -79,7 +79,7 @@ const ContentCourse = () => {
     } finally {
       setLoading(false);
     }
-  }, [videos]);
+  }, [modules]);
 
   // 3. Manejo de Permisos
   const requestMicrophonePermission = async () => {

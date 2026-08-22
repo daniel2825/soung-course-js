@@ -15,9 +15,10 @@ const COURSES_BY_PERSON_QUERY = gql`
     id,
     course {
       idCourse,
-      title
+      title,
       progress {
-        completed
+         idProgress,
+         total_progress
       }
     }
   }
@@ -45,7 +46,8 @@ const seachCoursesRegisteredByPerson = async () => {
     });
 
     console.log("Respuesta completa:", data.getPerson);
-    //console.log("Respuesta completa:", JSON.stringify(data, null, 2));
+        console.log("Respuesta completa:", data.getPerson.progress);
+    console.log("Respuesta completa:", JSON.stringify(data.getPerson, null, 2));
 
     return data?.getPerson.course ?? [];
 
@@ -63,6 +65,7 @@ const seachCoursesRegisteredByPerson = async () => {
     const syncAllCourses = async () => {
       try{
       const courses_list_registered_person = await seachCoursesRegisteredByPerson();
+
       setContentsToShow(courses_list_registered_person);
       }
       catch(error){
@@ -80,7 +83,7 @@ const seachCoursesRegisteredByPerson = async () => {
             titlecourse: item.title
           })}>
       <Text style={styles.text}>{item.title}</Text>
-      <Text style={styles.text}>{item.progress.completed} %</Text>
+      <Text style={styles.text}>{item.progress.total_progress} %</Text>
 
       </TouchableOpacity>
     </View>
