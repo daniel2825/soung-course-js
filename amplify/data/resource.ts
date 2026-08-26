@@ -6,7 +6,8 @@ const schema = a.schema({
         module_number: a.string(),
         module_title: a.string(),
         content: a.string(),
-        banner_video: a.string()
+        banner_video: a.string(),
+        color: a.string()
       }),
   SongCourseContent: a
     .model({
