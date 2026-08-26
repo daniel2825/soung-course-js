@@ -80,6 +80,7 @@ function OnboardingSlide({ item, index, scrollX, screenWidth, currentlyPlayingIn
         <Text style={styles.description}>{item.module_title}</Text>
 
       </Animated.View>
+       
       <VideoItem
         source={item.videoUrl}
         isPaused={index !== currentlyPlayingIndex}
@@ -264,15 +265,10 @@ const ContentCourse = () => {
         snapToAlignment="start"
         decelerationRate="fast"
       />
+
+       review properties to videos.
 */}
       <Animated.FlatList
-        ref={flatListRef}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        showsVerticalScrollIndicator={false}
-        snapToInterval={316}
-        snapToAlignment="start"
-        decelerationRate="fast"
         data={contentsToShow}
         horizontal
         pagingEnabled
@@ -292,7 +288,7 @@ const ContentCourse = () => {
       />
       
       <View style={styles.paginationContainer}>
-        {DATA.map((_, index) => (
+        {contentsToShow.map((_, index) => (
           <OnboardingDot 
             key={index} 
             index={index} 
@@ -301,6 +297,7 @@ const ContentCourse = () => {
           />
         ))}
       </View>
+      
       <View style={styles.pitchPanel}>
         <Text style={styles.header}>Detección de Tono</Text>
         <View style={styles.dataRow}>
