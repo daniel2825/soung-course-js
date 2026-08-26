@@ -156,6 +156,13 @@
               "type": "String",
               "isRequired": false,
               "attributes": []
+            },
+            "color": {
+              "name": "color",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
             }
           }
         }

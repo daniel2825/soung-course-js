@@ -25,7 +25,7 @@ const videoItem = ({ source, isPaused }) => {
 const styles = StyleSheet.create({
   videoContainer: {
     height: 300, // Customize height
-    width: '100%',
+    width: '90%',
     backgroundColor: '#000',
     marginVertical: 8,
   },
