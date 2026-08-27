@@ -23,6 +23,7 @@ import {
 } from 'react-native';
 
 import LivePitchDetection from '@techoptio/react-native-live-pitch-detection';
+import { ConsoleLogger } from 'aws-amplify/utils';
 /*
 const DATA = [
   { id: '1', title: 'Welcome!', desc: 'Explore the best features of our app.', color: '#F1f2f6' },
@@ -44,50 +45,7 @@ const DATA = [
  * FIXED SUB-COMPONENT: OnboardingSlide
  * Isolates the hooks for each item render in FlatList to prevent React Hook crashes.
  */
-function OnboardingSlide({ item, index, scrollX, screenWidth, currentlyPlayingIndex }) {
-  const rSlideStyle = useAnimatedStyle(() => {
-    const inputRange = [
-      (index - 1) * screenWidth,
-      index * screenWidth,
-      (index + 1) * screenWidth
-    ];
-    
-    const scale = interpolate(
-      scrollX.value,
-      inputRange,
-      [0.8, 1, 0.8],
-      Extrapolation.CLAMP
-    );
 
-    const opacity = interpolate(
-      scrollX.value,
-      inputRange,
-      [0.4, 1, 0.4],
-      Extrapolation.CLAMP
-    );
- 
-
-    return {
-      transform: [{ scale }],
-      opacity,
-    };
-  });
-
-  return (
-    <View style={[styles.slide, { width: screenWidth, backgroundColor: item.color}]}>
-      <Animated.View style={[styles.card, rSlideStyle]}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.module_title}</Text>
-
-      </Animated.View>
-       
-      <VideoItem
-        source={item.videoUrl}
-        isPaused={index !== currentlyPlayingIndex}
-      /> 
-    </View>
-  );
-}
 
 /**
  * FIXED SUB-COMPONENT: OnboardingDot
@@ -239,15 +197,53 @@ const ContentCourse = () => {
     );
   }
 
-  const renderVideos = ({ item, index }) => (
-    <View style={styles.videoContainer}>
-      <Text style={styles.videoTitle}>{item.title || titlecourse || "Video Course"}</Text>
-      <VideoItem
-        source={item.videoUrl}
-        isPaused={index !== currentlyPlayingIndex}
-      />
-    </View>
-  );
+
+
+  const OnboardingSlide = ({ item, index, scrollX, screenWidth }) => {
+  
+    const rSlideStyle = useAnimatedStyle(() => {
+      const inputRange = [
+        (index - 1) * screenWidth,
+        index * screenWidth,
+        (index + 1) * screenWidth
+      ];
+      
+      const scale = interpolate(
+        scrollX.value,
+        inputRange,
+        [0.8, 1, 0.8],
+        Extrapolation.CLAMP
+      );
+  
+      const opacity = interpolate(
+        scrollX.value,
+        inputRange,
+        [0.4, 1, 0.4],
+        Extrapolation.CLAMP
+      );
+   
+  
+      return {
+        transform: [{ scale }],
+        opacity,
+      };
+    });
+  
+    return (
+      <View style={[styles.slide, { width: screenWidth, backgroundColor: item.color}]}>
+        <Animated.View style={[styles.card, rSlideStyle]}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.description}>{item.module_title}</Text>
+  
+        </Animated.View>
+         
+        <VideoItem
+          source={item.videoUrl}
+          isPaused={index !== currentlyPlayingIndex}
+        /> 
+      </View>
+    );
+  }
 
   return (
      <View style={styles.container}>
@@ -269,6 +265,10 @@ const ContentCourse = () => {
        review properties to videos.
 */}
       <Animated.FlatList
+        ref={flatListRef}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        showsVerticalScrollIndicator={false}
         data={contentsToShow}
         horizontal
         pagingEnabled
@@ -282,7 +282,6 @@ const ContentCourse = () => {
             index={index}
             scrollX={scrollX}
             screenWidth={SCREEN_WIDTH}
-            currentlyPlayingIndex
           />
         )}
       />
